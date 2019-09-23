@@ -1,0 +1,294 @@
+94.196.230.145 - - [23/Sep/2019 21:33:25] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:33:26] "GET /screencast.mpd HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:33:26] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:33:26] "GET /favicon.ico HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:33:45] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:35:00] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:35:28] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:36:38] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:36:57] "GET / HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:00] "GET /screencast.mpd HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:00] "GET /screencast.mpd HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:00] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:00] "GET /favicon.ico HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:03] "GET /screencast_360.hdr HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:03] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:03] "GET /screencast_360_74.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:04] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:04] "GET /screencast_360_74.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:05] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:05] "GET /screencast_360_74.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:06] "GET /screencast_360_74.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:06] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:06] "GET /screencast_360_75.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:07] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:07] "GET /screencast_360_75.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:09] "GET /screencast_360_75.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:09] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:09] "GET /screencast_360_76.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:10] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:10] "GET /screencast_360_76.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:11] "GET /screencast_360_76.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:11] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:11] "GET /screencast_360_77.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:13] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:13] "GET /screencast_360_77.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:14] "GET /screencast_360_77.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:14] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:14] "GET /screencast_360_78.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:15] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:15] "GET /screencast_360_78.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:16] "GET /screencast_360_78.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:16] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:16] "GET /screencast_360_79.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:18] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:18] "GET /screencast_360_79.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:19] "GET /screencast_360_79.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:19] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:19] "GET /screencast_360_80.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:20] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:20] "GET /screencast_360_80.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:21] "GET /screencast_360_80.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:22] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:22] "GET /screencast_360_81.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:23] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:23] "GET /screencast_360_81.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:24] "GET /screencast_360_81.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:24] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:24] "GET /screencast_360_82.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:25] "GET /screencast_360_82.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:25] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:25] "GET /screencast_360_83.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:27] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:27] "GET /screencast_360_83.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:28] "GET /screencast_360_83.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:28] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:28] "GET /screencast_360_84.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:29] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:29] "GET /screencast_360_84.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:30] "GET /screencast_360_84.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:31] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:31] "GET /screencast_360_85.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:32] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:32] "GET /screencast_360_85.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:33] "GET /screencast_360_85.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:33] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:33] "GET /screencast_360_86.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:34] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:34] "GET /screencast_360_86.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:35] "GET /screencast_360_86.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:36] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:36] "GET /screencast_360_87.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:37] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:37] "GET /screencast_360_87.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:38] "GET /screencast_360_87.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:38] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:38] "GET /screencast_360_88.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:39] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:39] "GET /screencast_360_88.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:40] "GET /screencast_360_88.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:41] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:41] "GET /screencast_360_89.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:42] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:42] "GET /screencast_360_89.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:43] "GET /screencast_360_89.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:43] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:43] "GET /screencast_360_90.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:44] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:44] "GET /screencast_360_90.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:45] "GET /screencast_360_90.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:46] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:46] "GET /screencast_360_91.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:47] "GET /screencast_360_91.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:47] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:47] "GET /screencast_360_92.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:48] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:48] "GET /screencast_360_92.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:49] "GET /screencast_360_92.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:50] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:50] "GET /screencast_360_93.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:51] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:51] "GET /screencast_360_93.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:52] "GET /screencast_360_93.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:52] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:52] "GET /screencast_360_94.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:53] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:53] "GET /screencast_360_94.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:55] "GET /screencast_360_94.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:55] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:55] "GET /screencast_360_95.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:56] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:56] "GET /screencast_360_95.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:57] "GET /screencast_360_95.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:37:57] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:57] "GET /screencast_360_96.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:37:58] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:37:58] "GET /screencast_360_96.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:38:00] "GET /screencast_360_96.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:00] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:38:00] "GET /screencast_360_97.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:38:03] "GET /screencast_360_97.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:03] code 404, message File not found
+94.196.230.145 - - [23/Sep/2019 21:38:03] "GET /screencast_360_98.chk HTTP/1.1" 404 -
+94.196.230.145 - - [23/Sep/2019 21:38:04] "GET /screencast_360_98.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:27] "GET /screencast_360_99.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:29] "GET /screencast_360_100.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:32] "GET /screencast_360_101.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:34] "GET /screencast_360_102.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:37] "GET /screencast_360_103.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:39] "GET /screencast_360_104.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:41] "GET /screencast_360_105.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:44] "GET /screencast_360_106.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:46] "GET /screencast_360_107.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:48] "GET /screencast_360_108.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:51] "GET /screencast_360_109.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:53] "GET /screencast_360_110.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:56] "GET /screencast_360_111.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:38:58] "GET /screencast_360_112.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:01] "GET /screencast_360_113.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:03] "GET /screencast_360_114.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:07] "GET /screencast_360_115.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:07] "GET /screencast_360_116.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:10] "GET /screencast_360_117.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:12] "GET /screencast_360_118.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:15] "GET /screencast_360_119.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:17] "GET /screencast_360_120.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:20] "GET /screencast_360_121.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:22] "GET /screencast_360_122.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:25] "GET /screencast_360_123.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:27] "GET /screencast_360_124.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:29] "GET /screencast_360_125.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:32] "GET /screencast_360_126.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:34] "GET /screencast_360_127.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:36] "GET /screencast_360_128.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:39] "GET /screencast_360_129.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:41] "GET /screencast_360_130.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:44] "GET /screencast_360_131.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:46] "GET /screencast_360_132.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:49] "GET /screencast_360_133.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:51] "GET /screencast_360_134.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:53] "GET /screencast_360_135.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:56] "GET /screencast_360_136.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:39:58] "GET /screencast_360_137.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:00] "GET /screencast_360_138.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:03] "GET /screencast_360_139.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:05] "GET /screencast_360_140.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:10] "GET /screencast_360_141.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:10] "GET /screencast_360_142.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:13] "GET /screencast_360_143.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:15] "GET /screencast_360_144.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:17] "GET /screencast_360_145.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:20] "GET /screencast_360_146.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:22] "GET /screencast_360_147.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:24] "GET /screencast_360_148.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:36] "GET /screencast_360_149.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:39] "GET /screencast_360_150.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:41] "GET /screencast_360_151.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:43] "GET /screencast_360_152.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:46] "GET /screencast_360_153.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:48] "GET /screencast_360_154.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:51] "GET /screencast_360_155.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:53] "GET /screencast_360_156.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:56] "GET /screencast_360_157.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:40:58] "GET /screencast_360_158.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:00] "GET /screencast_360_159.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:02] "GET /screencast_360_160.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:05] "GET /screencast_360_161.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:07] "GET /screencast_360_162.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:10] "GET /screencast_360_163.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:14] "GET /screencast_360_164.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:15] "GET /screencast_360_165.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:17] "GET /screencast_360_166.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:20] "GET /screencast_360_167.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:22] "GET /screencast_360_168.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:24] "GET /screencast_360_169.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:26] "GET /screencast_360_170.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:29] "GET /screencast_360_171.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:31] "GET /screencast_360_172.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:34] "GET /screencast_360_173.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:36] "GET /screencast_360_174.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:38] "GET /screencast_360_175.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:41] "GET /screencast_360_176.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:43] "GET /screencast_360_177.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:46] "GET /screencast_360_178.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:48] "GET /screencast_360_179.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:50] "GET /screencast_360_180.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:53] "GET /screencast_360_181.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:55] "GET /screencast_360_182.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:41:58] "GET /screencast_360_183.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:00] "GET /screencast_360_184.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:02] "GET /screencast_360_185.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:05] "GET /screencast_360_186.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:07] "GET /screencast_360_187.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:10] "GET /screencast_360_188.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:12] "GET /screencast_360_189.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:14] "GET /screencast_360_190.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:17] "GET /screencast_360_191.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:19] "GET /screencast_360_192.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:22] "GET /screencast_360_193.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:24] "GET /screencast_360_194.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:26] "GET /screencast_360_195.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:29] "GET /screencast_360_196.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:32] "GET /screencast_360_197.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:34] "GET /screencast_360_198.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:36] "GET /screencast_360_199.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:39] "GET /screencast_360_200.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:41] "GET /screencast_360_201.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:43] "GET /screencast_360_202.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:46] "GET /screencast_360_203.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:48] "GET /screencast_360_204.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:50] "GET /screencast_360_205.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:53] "GET /screencast_360_206.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:56] "GET /screencast_360_207.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:42:58] "GET /screencast_360_208.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:00] "GET /screencast_360_209.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:02] "GET /screencast_360_210.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:05] "GET /screencast_360_211.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:07] "GET /screencast_360_212.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:10] "GET /screencast_360_213.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:12] "GET /screencast_360_214.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:14] "GET /screencast_360_215.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:17] "GET /screencast_360_216.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:21] "GET /screencast_360_217.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:22] "GET /screencast_360_218.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:24] "GET /screencast_360_219.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:26] "GET /screencast_360_220.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:29] "GET /screencast_360_221.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:32] "GET /screencast_360_222.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:34] "GET /screencast_360_223.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:36] "GET /screencast_360_224.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:39] "GET /screencast_360_225.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:41] "GET /screencast_360_226.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:43] "GET /screencast_360_227.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:46] "GET /screencast_360_228.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:48] "GET /screencast_360_229.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:50] "GET /screencast_360_230.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:53] "GET /screencast_360_231.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:56] "GET /screencast_360_232.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:43:58] "GET /screencast_360_233.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:00] "GET /screencast_360_234.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:02] "GET /screencast_360_235.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:05] "GET /screencast_360_236.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:07] "GET /screencast_360_237.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:10] "GET /screencast_360_238.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:12] "GET /screencast_360_239.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:15] "GET /screencast_360_240.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:17] "GET /screencast_360_241.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:19] "GET /screencast_360_242.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:24] "GET /screencast_360_243.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:24] "GET /screencast_360_244.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:26] "GET /screencast_360_245.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:29] "GET /screencast_360_246.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:32] "GET /screencast_360_247.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:34] "GET /screencast_360_248.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:36] "GET /screencast_360_249.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:39] "GET /screencast_360_250.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:41] "GET /screencast_360_251.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:43] "GET /screencast_360_252.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:46] "GET /screencast_360_253.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:48] "GET /screencast_360_254.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:50] "GET /screencast_360_255.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:53] "GET /screencast_360_256.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:56] "GET /screencast_360_257.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:44:57] "GET /screencast_360_258.chk HTTP/1.1" 200 -
+94.196.230.145 - - [23/Sep/2019 21:45:00] "GET /screencast_360_259.chk HTTP/1.1" 200 -

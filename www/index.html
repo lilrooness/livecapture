@@ -1,0 +1,39 @@
+<html>
+
+
+	<script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+	  <script>
+
+		      function startVideo(mpd) {
+
+			            var video, context, player;
+
+			            video = document.querySelector('video');
+
+			            context = new Dash.di.DashContext();
+
+			            player = new MediaPlayer(context);
+
+			            player.startup();
+
+			            player.attachView(video);
+
+			            player.setAutoPlay(true);
+
+			            player.attachSource(mpd);
+
+			          }
+
+  </script>
+	<!--<body onload="startVideo('screencap_live.mpd'^)">
+	
+		<h1>Frandoodle Stadia</h1>
+		<video controls></video>
+
+	</body> -->
+
+   <div>
+	          <video data-dashjs-player autoplay src="screencast.mpd" controls></video>
+		     </div>
+</html>
