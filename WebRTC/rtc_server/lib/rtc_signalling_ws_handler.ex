@@ -32,7 +32,19 @@ defmodule RtcServer.Signalling.WSHandler do
 
   def websocket_handle({:text, json}, state) do
     # IO.inspect(limit: :infinity)
-    Jason.decode!(json) |> Map.get("payload") |> Map.get("sdp") |> IO.puts()
+    Jason.decode(json)
+    |> case do
+      {:ok, %{"payload" => %{"sdp" => sdp}}} ->
+        IO.puts(sdp)
+
+      {:ok, candidate} ->
+        IO.inspect(candidate)
+
+      _ ->
+        IO.inspect(json)
+    end
+
+    # IO.puts(data)
 
     {:ok, state}
   end
