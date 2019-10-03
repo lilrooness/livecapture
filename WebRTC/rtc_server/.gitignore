@@ -23,3 +23,5 @@ erl_crash.dump
 rtc_server-*.tar
 
 priv/cert/*
+
+/WebRTC/rtc_server/.elixir_ls/
