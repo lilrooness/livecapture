@@ -33,6 +33,8 @@ defmodule RtcServer.SRTPTransportLayer do
       msg
       |> Tuple.to_list()
 
+    :ok = :gen_udp.controlling_process(socket, self())
+
     handle_call(msg, from, %{state | socket: socket})
   end
 
