@@ -9,7 +9,7 @@ defmodule StunServer do
     GenServer.start(__MODULE__, [], name: __MODULE__)
   end
 
-  def init() do
+  def init([]) do
     {:ok, socket} = :gen_udp.open(19302)
 
     {:ok, %__MODULE__{socket: socket}}

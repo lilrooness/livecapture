@@ -3,6 +3,8 @@ defmodule RtcServer.SRTP.Server do
 
   defstruct [:listen_socket]
 
+  @cb_info {RtcServer.SRTPTransportLayer, :udp, :udp_closed, :udp_error}
+
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
@@ -17,14 +19,30 @@ defmodule RtcServer.SRTP.Server do
   end
 
   def handle_cast({:new_dtls_connection, ssl_socket}, state) do
-    :ok = :ssl.ssl_accept(ssl_socket)
-    RtcServer.Dtls.Session.start_link(ssl_socket)
+    {:ok, ssl_hs_socket, _ext} = :ssl.handshake(ssl_socket, handshake: :hello)
+    {:ok, new_ssl_socket} = :ssl.handshake_continue(ssl_hs_socket, cb_info: @cb_info)
+
+    {:ok, peer_certificate} = :ssl.peercert(new_ssl_socket)
+
+    %{
+      tbsCertificate: %{
+        subjectPublicKeyInfo: %{
+          subjectPublicKey: peer_public_key,
+          algorithm: %{
+            algorithm: _algo,
+            parameters: _public_key_params
+          }
+        }
+      }
+    } = :public_key.pkix_decode_cert(peer_certificate, :plain)
+
     async_wait_for_connection(state.listen_socket)
     {:noreply, state}
   end
 
   defp get_listen_socket() do
-    :ssl.listen(9999,
+    :ssl.listen(
+      9999,
       certfile: 'priv/CertAndPrivate.pem',
       keyfile: 'priv/PrivateKey.key',
       reuseaddr: true,
