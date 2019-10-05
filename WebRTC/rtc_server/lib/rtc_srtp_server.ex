@@ -22,19 +22,24 @@ defmodule RtcServer.SRTP.Server do
     {:ok, ssl_hs_socket, _ext} = :ssl.handshake(ssl_socket, handshake: :hello)
     {:ok, new_ssl_socket} = :ssl.handshake_continue(ssl_hs_socket, cb_info: @cb_info)
 
-    {:ok, peer_certificate} = :ssl.peercert(new_ssl_socket)
+    # {:ok, peer_certificate} = :ssl.peercert(new_ssl_socket)
 
-    %{
-      tbsCertificate: %{
-        subjectPublicKeyInfo: %{
-          subjectPublicKey: peer_public_key,
-          algorithm: %{
-            algorithm: _algo,
-            parameters: _public_key_params
-          }
-        }
-      }
-    } = :public_key.pkix_decode_cert(peer_certificate, :plain)
+    {:ok, master_secret: master_secret} =
+      :ssl.connection_information(new_ssl_socket, [:master_secret])
+
+    RtcServer.SRTPTransportLayer.set_master_secret(master_secret)
+
+    # %{
+    #   tbsCertificate: %{
+    #     subjectPublicKeyInfo: %{
+    #       subjectPublicKey: peer_public_key,
+    #       algorithm: %{
+    #         algorithm: _algo,
+    #         parameters: _public_key_params
+    #       }
+    #     }
+    #   }
+    # } = :public_key.pkix_decode_cert(peer_certificate, :plain)
 
     async_wait_for_connection(state.listen_socket)
     {:noreply, state}

@@ -4,15 +4,15 @@ defmodule RtcServer.SRTPTransportLayer do
   defstruct [
     :socket,
     :crypto_state_enc,
-    :peer_public_key
+    :master_key
   ]
 
   ###############################################################
   ###################### SRTP SOCKET API ########################
   ###############################################################
 
-  def set_public_key(public_key) do
-    GenServer.call(SRTPServer, {:set_peer_public_key, public_key})
+  def set_master_key(master_key) do
+    GenServer.call(SRTPServer, {:set_master_key, master_key})
   end
 
   def send_srtp_packet(payload) do
@@ -33,11 +33,11 @@ defmodule RtcServer.SRTPTransportLayer do
     {:ok, %__MODULE__{}}
   end
 
-  def handle_call({:set_peer_public_key, key}, _from, state) do
+  def handle_call({:set_master_key, key}, _from, state) do
     # 128 bit Counter 'initialisation vector' for AES Counter (CTR) Mode
     iv = <<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>>
     state_enc = :crypto.crypto_init(:aes_128_ctr, key, iv, true)
-    {:reply, :ok, %{state | peer_public_key: key, crypto_state_enc: state_enc}}
+    {:reply, :ok, %{state | master_key: key, crypto_state_enc: state_enc}}
   end
 
   # grab the socket from the first function call

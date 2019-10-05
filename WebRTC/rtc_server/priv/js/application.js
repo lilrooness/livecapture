@@ -4,13 +4,13 @@
       this.socket = new WebSocket("ws://localhost:4000/ws/chat");
 
       this.socket.onopen = () => {
-        // const config = {
-        //   iceServers: [{ url: "stun:stun.l.google.com:19302" }]
-        // };
-
         const config = {
-          iceServers: [{ url: "localhost:19302" }]
+          iceServers: [{ url: "stun:stun.l.google.com:19302" }]
         };
+
+        // const config = {
+        //   iceServers: [{ url: "localhost:19302" }]
+        // };
         let rtcPeerConnection = new window.RTCPeerConnection(config);
         // console.log(rtcPeerConnection)
         const dataChannelConfig = { ordered: true, maxRetransmits: 0 };
