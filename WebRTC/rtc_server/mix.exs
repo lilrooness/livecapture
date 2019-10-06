@@ -25,7 +25,8 @@ defmodule RtcServer.MixProject do
       {:cowboy, "~> 2.4"},
       {:plug, "~> 1.7"},
       {:plug_cowboy, "~> 2.0"},
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+      {:gen_state_machine, "~> 2.0"}
     ]
   end
 end
