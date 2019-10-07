@@ -15,6 +15,7 @@
         rtcPeerConnection.setRemoteDescription({ type: "offer", sdp: offer.payload.sdp });
 
         rtcPeerConnection.onIceCandidate = (iceEvent) => {
+          rtcPeerConnection.addIceCandidate()
           console.log(iceEvent.target.iceGatheringState)
           if (iceEvent.target.iceGatheringState === "complete") {
             rtcPeerConnection.createAnswer((answer) => {
@@ -23,6 +24,12 @@
             })
           }
         }
+
+        rtcPeerConnection.createAnswer((answer) => {
+          rtcPeerConnection.setLocalDescription(answer);
+          this.socket.send(answer)
+        })
+
       }
 
       // this.socket.onopen = () => {
