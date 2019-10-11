@@ -47,11 +47,12 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   @impl true
-  def handle_info(data, state) do
+  def handle_info(input, state) do
+    {:udp, _port, _saddr, _sport, data} = input
     IO.inspect(data, label: :info_data)
 
     case data do
-      <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
+      <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
         Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
 
