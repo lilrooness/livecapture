@@ -1,6 +1,8 @@
 defmodule RtcServer.MuxerDemuxer do
   use GenServer
 
+  require Logger
+
   defstruct [
     :multiplexed_socket,
     non_muxed_sockets: %{

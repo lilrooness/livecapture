@@ -3,34 +3,40 @@
     setupSocket() {
       this.socket = new WebSocket("ws://localhost:4000/ws/chat");
 
-      this.socket.onmessage = (event) => {
-
+      this.socket.onmessage = event => {
         const config = {
           iceServers: [{ url: "stun:stun.l.google.com:19302" }]
         };
 
-        const offer = JSON.parse(event.data)
-        console.log(offer.payload.sdp)
+        const offer = JSON.parse(event.data);
+        console.log(offer.payload.sdp);
         let rtcPeerConnection = new window.RTCPeerConnection(config);
-        rtcPeerConnection.setRemoteDescription({ type: "offer", sdp: offer.payload.sdp });
+        rtcPeerConnection.setRemoteDescription({
+          type: "offer",
+          sdp: offer.payload.sdp
+        });
 
-        rtcPeerConnection.onIceCandidate = (iceEvent) => {
-          rtcPeerConnection.addIceCandidate()
-          console.log(iceEvent.target.iceGatheringState)
-          if (iceEvent.target.iceGatheringState === "complete") {
-            rtcPeerConnection.createAnswer((answer) => {
-              rtcPeerConnection.setLocalDescription(answer);
-              this.socket.send(answer)
-            })
-          }
-        }
+        rtcPeerConnection.onIceCandidate = iceEvent => {
+          rtcPeerConnection.addIceCandidate();
+          console.log(iceEvent.target.iceGatheringState);
+          // if (iceEvent.target.iceGatheringState === "complete") {
+          //   rtcPeerConnection.createAnswer(answer => {
+          //     rtcPeerConnection.setLocalDescription(answer);
+          //     this.socket.send(answer);
+          //   });
+          // }
+        };
 
-        rtcPeerConnection.createAnswer((answer) => {
+        // rtcPeerConnection.createAnswer((answer) => {
+        //   rtcPeerConnection.setLocalDescription(answer);
+        //   this.socket.send(answer)
+        // })
+
+        rtcPeerConnection.createAnswer().then(answer => {
           rtcPeerConnection.setLocalDescription(answer);
-          this.socket.send(answer)
-        })
-
-      }
+          this.socket.send(answer.sdp);
+        });
+      };
 
       // this.socket.onopen = () => {
       //   const config = {
@@ -77,16 +83,16 @@
       //   rtcPeerConnection.createOffer(onOfferCreated, () => { }, sdpConstraints);
       // };
 
-      this.socket.addEventListener("message", (event) => {
-        const pTag = document.createElement("p")
-        pTag.innerHTML = event.data
+      this.socket.addEventListener("message", event => {
+        const pTag = document.createElement("p");
+        pTag.innerHTML = event.data;
 
-        document.getElementById("main").append(pTag)
-      })
+        document.getElementById("main").append(pTag);
+      });
 
       this.socket.addEventListener("close", () => {
-        this.setupSocket()
-      })
+        this.setupSocket();
+      });
     }
 
     submit(event) {
