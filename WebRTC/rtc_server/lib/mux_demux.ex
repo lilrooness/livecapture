@@ -54,7 +54,8 @@ defmodule RtcServer.MuxerDemuxer do
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
-        Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
+        # Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
+        StunPacketAttrs.parse(attrs, length)
 
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
         transaction_id::integer-size(96), attrs::binary>> ->
@@ -63,14 +64,63 @@ defmodule RtcServer.MuxerDemuxer do
 
     {:noreply, state}
   end
+end
 
-  # def recv(:cast, {:send, data}, state = %__MODULE__{multiplexed_socket: socket}) do
-  #   :socket.send(socket, data)
-  #   {:next_event, {:internal, {:recv, @udp_mtu}}, state}
-  # end
+defmodule StunPacketAttrs do
+  require Logger
 
-  # def recv(:internal, {:recv, mtu_size}, state = %__MODULE__{multiplexed_socket: socket}) do
-  #   {:ok, data} = :socket.recv(socket, mtu_size, :nowait)
-  #   {:next_event, {:internal, {:recv, @udp_mtu}}, state}
-  # end
+  defstruct [
+    :username,
+    :ice_controlled,
+    :ice_controller,
+    :priority,
+    :message_integrity,
+    :fingerprint
+  ]
+
+  def parse(attrs, _length) do
+    attrs_list = [username_attr | _rest] = seperate_binary(attrs)
+    IO.inspect(username_attr, label: "username_attr")
+  end
+
+  def seperate_binary(attrs) do
+    seperate_binary(attrs, [])
+  end
+
+  def seperate_binary(<<>>, attrs_list) do
+    attrs_list
+  end
+
+  def seperate_binary(attrs_binary, attrs_list) do
+    <<attr_type::integer-size(16), attr_length::integer-size(16), rest_including_attr::binary>> =
+      attrs_binary
+
+    # attrs are padded to the nearest multiple of 4 bytes
+    padding_bytes =
+      case rem(attr_length, 4) do
+        0 -> 0
+        r -> 4 - r
+      end
+
+    <<attr::binary-size(attr_length), rest_maybe_including_padding::binary>> = rest_including_attr
+
+    <<_padding::binary-size(padding_bytes), rest::binary>> = rest_maybe_including_padding
+
+    seperate_binary(rest, [{attr_type, attr_length, attr} | attrs_list])
+  end
+end
+
+defmodule StunUsernameAttr do
+  defstruct [
+    :length,
+    :username,
+    :padding
+  ]
+end
+
+defmodule StunFingerprintAttr do
+  defstruct [
+    :length,
+    :crc_32
+  ]
 end
