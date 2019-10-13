@@ -48,8 +48,11 @@ defmodule RtcServer.MuxerDemuxer do
 
   @impl true
   def handle_info(input, state) do
-    {:udp, _port, _saddr, _sport, data} = input
-    IO.inspect(data, label: :info_data)
+    {:udp, _socket, ip, src_port, data} = input
+
+    # IO.inspect(input, label: input)
+
+    # IO.inspect(data, label: :info_data)
 
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
