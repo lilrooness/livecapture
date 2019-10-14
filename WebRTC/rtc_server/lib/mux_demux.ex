@@ -42,17 +42,13 @@ defmodule RtcServer.MuxerDemuxer do
     <<message_type::binary, message_length::binary, magic_cookie::binary, transaction_id::binary>>
   end
 
-  def generate_stun_payload(_type) do
+  def generate_stun_payload(:response, transaction_id, attrs) do
     Logger.error("Does not support generating stun payloads of type #{_type}")
   end
 
   @impl true
   def handle_info(input, state) do
     {:udp, _socket, ip, src_port, data} = input
-
-    # IO.inspect(input, label: input)
-
-    # IO.inspect(data, label: :info_data)
 
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
@@ -82,8 +78,8 @@ defmodule StunPacketAttrs do
   ]
 
   def parse(attrs, _length) do
-    attrs_list = [username_attr | _rest] = seperate_binary(attrs)
-    IO.inspect(username_attr, label: "username_attr")
+    attrs_list = seperate_binary(attrs)
+    attrs_list
   end
 
   def seperate_binary(attrs) do
@@ -98,6 +94,8 @@ defmodule StunPacketAttrs do
     <<attr_type::integer-size(16), attr_length::integer-size(16), rest_including_attr::binary>> =
       attrs_binary
 
+    type_atom = identify_attribute_type(attr_type) |> IO.inspect()
+
     # attrs are padded to the nearest multiple of 4 bytes
     padding_bytes =
       case rem(attr_length, 4) do
@@ -109,7 +107,18 @@ defmodule StunPacketAttrs do
 
     <<_padding::binary-size(padding_bytes), rest::binary>> = rest_maybe_including_padding
 
-    seperate_binary(rest, [{attr_type, attr_length, attr} | attrs_list])
+    seperate_binary(rest, [{type_atom, {attr_length, attr}} | attrs_list])
+  end
+
+  def identify_attribute_type(attr_type_binary) do
+    case attr_type_binary do
+      0x0006 -> :username
+      0xC057 -> :unknown
+      0x8029 -> :ice_controlled
+      0x0024 -> :priority
+      0x0008 -> :message_integrity
+      0x8028 -> :fingerprint
+    end
   end
 end
 
