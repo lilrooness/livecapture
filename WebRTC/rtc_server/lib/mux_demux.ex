@@ -2,6 +2,9 @@ defmodule RtcServer.MuxerDemuxer do
   use GenServer
 
   require Logger
+  require Bitwise
+
+  @fingerprint_xor 0x5354554E
 
   defstruct [
     :my_sdp,
@@ -40,19 +43,55 @@ defmodule RtcServer.MuxerDemuxer do
     <<message_type::binary, message_length::binary, magic_cookie::binary, transaction_id::binary>>
   end
 
-  def generate_stun_payload(:response, transaction_id, attrs) do
-    # Logger.error("Does not support generating stun payloads of type #{_type}")
+  def generate_stun_response(transaction_id, attrs, hmac_key) do
+    message_type = <<0x1001::integer-size(16)>>
+    magic_cookie = <<0x2112A442::integer-size(32)>>
+
+    # ice_controlled, hmac, fingerprint
+    length = <<2 + 28 + 8::integer-size(16)>>
+
+    ice_controlled = <<0x8029::integer-size(16)>>
+
+    integrety_check_input =
+      <<message_type::binary, magic_cookie::binary, transaction_id::integer-size(96),
+        length::binary, ice_controlled::binary>>
+
+    hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
+
+    hmac_attr = <<0x0008::integer-size(16), 0x0014::integer-size(16), hmac::binary-size(20)>>
+
+    fingerprint_input = <<integrety_check_input::binary, hmac_attr::binary>>
+
+    crc_32 = Bitwise.bxor(:erlang.crc32(fingerprint_input), @fingerprint_xor)
+
+    fingerprint_attr =
+      <<0x8028::integer-size(16), 0x0004::integer-size(16), crc_32::integer-size(32)>>
+
+    <<fingerprint_input::binary, fingerprint_attr::binary>>
   end
 
   @impl true
   def handle_info(input, state) do
     {:udp, _socket, ip, src_port, data} = input
 
+    %{
+      multiplexed_socket: socket,
+      peer_sdp: peer_sdp
+      # "ice-pwd" => hmac_key
+      # }
+    } = state
+
+    hmac_key = Keyword.get(peer_sdp, :"ice-pwd")
+
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
         # Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
-        StunPacketAttrs.parse(attrs, length)
+        IO.inspect("Received stun packed")
+        attrs = StunPacketAttrs.parse(attrs, length)
+        response_packet = generate_stun_response(transaction_id, attrs, hmac_key)
+
+      # :gen_udp.send(socket, ip, src_port, response_packet)
 
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
         transaction_id::integer-size(96), attrs::binary>> ->

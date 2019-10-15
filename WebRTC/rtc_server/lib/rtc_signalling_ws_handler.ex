@@ -55,17 +55,17 @@ defmodule RtcServer.Signalling.WSHandler do
     |> String.split("\n")
     |> Enum.map(fn line ->
       with [key] <- String.split(line, "=") do
-        {key, ""}
+        {String.to_atom(key), ""}
       else
         ["a", "ice-lite"] ->
-          {"a", "ice-lite"}
+          {:a, "ice-lite"}
 
         ["a", value] ->
           [inner_k, inner_v] = value |> String.split(":", parts: 2)
-          {inner_k, String.strip(inner_v)}
+          {String.to_atom(inner_k), String.strip(inner_v)}
 
         [key, value] ->
-          {key, String.strip(value)}
+          {String.to_atom(key), String.strip(value)}
       end
     end)
   end
