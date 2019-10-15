@@ -26,42 +26,47 @@ defmodule RtcServer.Signalling.WSHandler do
     {:ok, state}
   end
 
-  # def websocket_handle({:text, json}, state) do
-  #   payload = Jason.decode!(json)
-  #   message = payload["data"]["message"] |> IO.inspect()
-
-  #   Registry.RTCServer
-  #   |> Registry.dispatch(state.registry_key, fn entries ->
-  #     for {pid, _} <- entries do
-  #       if pid != self() do
-  #         Process.send(pid, message, [])
-  #       end
-  #     end
-  #   end)
-
-  #   {:reply, {:text, "YOU: " <> message}, state}
-  # end
-
   def websocket_handle({:text, json}, state) do
     # IO.inspect(limit: :infinity)
     Jason.decode(json)
     |> case do
-      {:ok, %{"payload" => %{"sdp" => sdp}}} ->
-        IO.puts(sdp)
+      {:ok, %{"sdp" => sdp_string}} ->
+        peer_sdp = process_sdp(sdp_string)
+
+        my_sdp = process_sdp(@sdpOffer)
+        RtcServer.MuxerDemuxer.start_link(my_sdp, peer_sdp)
 
       {:ok, candidate} ->
-        IO.inspect(candidate)
+        IO.inspect(candidate, label: :candidate)
 
       _ ->
-        IO.inspect(json)
+        IO.inspect(json, label: :raw)
     end
-
-    # IO.puts(data)
 
     {:ok, state}
   end
 
   def websocket_info({:send, text}, state) do
     {:reply, {:text, text}, state}
+  end
+
+  defp process_sdp(sdp_string) do
+    sdp_string
+    |> String.split("\n")
+    |> Enum.map(fn line ->
+      with [key] <- String.split(line, "=") do
+        {key, ""}
+      else
+        ["a", "ice-lite"] ->
+          {"a", "ice-lite"}
+
+        ["a", value] ->
+          [inner_k, inner_v] = value |> String.split(":", parts: 2)
+          {inner_k, String.strip(inner_v)}
+
+        [key, value] ->
+          {key, String.strip(value)}
+      end
+    end)
   end
 end

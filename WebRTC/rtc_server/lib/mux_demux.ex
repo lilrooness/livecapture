@@ -4,6 +4,8 @@ defmodule RtcServer.MuxerDemuxer do
   require Logger
 
   defstruct [
+    :my_sdp,
+    :peer_sdp,
     :multiplexed_socket,
     non_muxed_sockets: %{
       stun: nil,
@@ -15,22 +17,18 @@ defmodule RtcServer.MuxerDemuxer do
 
   @udp_mtu 1460
 
-  def start_link() do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  def start_link(my_sdp, peer_sdp) do
+    IO.inspect({my_sdp, peer_sdp})
+    GenServer.start_link(__MODULE__, %{my_sdp: my_sdp, peer_sdp: peer_sdp}, name: __MODULE__)
   end
 
   @impl true
-  def init([]) do
+  def init(%{my_sdp: my_sdp, peer_sdp: peer_sdp}) do
     {:ok, socket} = :gen_udp.open(9999, [{:active, true}, :binary])
 
-    # :gen_udp.send(
-    #   socket,
-    #   {10, 249, 65, 117},
-    #   9876,
-    #   generate_stun_payload(:binding)
-    # )
+    :crypto.start()
 
-    {:ok, %__MODULE__{multiplexed_socket: socket}}
+    {:ok, %__MODULE__{multiplexed_socket: socket, my_sdp: my_sdp, peer_sdp: peer_sdp}}
   end
 
   def generate_stun_payload(:binding) do
@@ -43,7 +41,7 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   def generate_stun_payload(:response, transaction_id, attrs) do
-    Logger.error("Does not support generating stun payloads of type #{_type}")
+    # Logger.error("Does not support generating stun payloads of type #{_type}")
   end
 
   @impl true
@@ -59,6 +57,9 @@ defmodule RtcServer.MuxerDemuxer do
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
         transaction_id::integer-size(96), attrs::binary>> ->
         Logger.info("STUN BINDING SUCCESS: ATTRS: #{attrs} ")
+
+      _ ->
+        Logger.info("SOMETHING ELSE IS ARRIVING")
     end
 
     {:noreply, state}
@@ -94,7 +95,7 @@ defmodule StunPacketAttrs do
     <<attr_type::integer-size(16), attr_length::integer-size(16), rest_including_attr::binary>> =
       attrs_binary
 
-    type_atom = identify_attribute_type(attr_type) |> IO.inspect()
+    type_atom = identify_attribute_type(attr_type)
 
     # attrs are padded to the nearest multiple of 4 bytes
     padding_bytes =

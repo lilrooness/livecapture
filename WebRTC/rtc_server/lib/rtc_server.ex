@@ -17,8 +17,6 @@ defmodule RtcServer do
       )
     ]
 
-    RtcServer.MuxerDemuxer.start_link() |> IO.inspect()
-
     opts = [strategy: :one_for_one, name: MyWebsocketApp.Application]
     Supervisor.start_link(children, opts)
   end
