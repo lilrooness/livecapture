@@ -88,8 +88,8 @@ defmodule RtcServer.MuxerDemuxer do
         transaction_id::integer-size(96), attrs::binary>> ->
         # Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
         IO.inspect("Received stun packed")
-        attrs = StunPacketAttrs.parse(attrs, length)
-        response_packet = generate_stun_response(transaction_id, attrs, hmac_key)
+        attrs_list = StunPacketAttrs.parse(attrs, length)
+        response_packet = generate_stun_response(transaction_id, attrs_list, hmac_key)
 
       # :gen_udp.send(socket, ip, src_port, response_packet)
 
