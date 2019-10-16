@@ -44,26 +44,30 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   def generate_stun_response(transaction_id, attrs, hmac_key) do
-    message_type = <<0x1001::integer-size(16)>>
+    message_type = <<0x0101::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
     # ice_controlled, hmac, fingerprint
-    length = <<2 + 28 + 8::integer-size(16)>>
+    length = <<12 + 24 + 8::integer-size(16)>>
 
-    ice_controlled = <<0x8029::integer-size(16)>>
+    # 12 bytes
+    ice_controlled =
+      <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
 
     integrety_check_input =
-      <<message_type::binary, magic_cookie::binary, transaction_id::integer-size(96),
-        length::binary, ice_controlled::binary>>
+      <<message_type::binary, length::binary, magic_cookie::binary,
+        transaction_id::integer-size(96), ice_controlled::binary>>
 
     hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
 
+    # 24 bytes
     hmac_attr = <<0x0008::integer-size(16), 0x0014::integer-size(16), hmac::binary-size(20)>>
 
     fingerprint_input = <<integrety_check_input::binary, hmac_attr::binary>>
 
     crc_32 = Bitwise.bxor(:erlang.crc32(fingerprint_input), @fingerprint_xor)
 
+    # 8 bytes
     fingerprint_attr =
       <<0x8028::integer-size(16), 0x0004::integer-size(16), crc_32::integer-size(32)>>
 
@@ -73,6 +77,9 @@ defmodule RtcServer.MuxerDemuxer do
   @impl true
   def handle_info(input, state) do
     {:udp, _socket, ip, src_port, data} = input
+
+    IO.inspect(src_port)
+    IO.inspect(ip)
 
     %{
       multiplexed_socket: socket,
@@ -90,8 +97,7 @@ defmodule RtcServer.MuxerDemuxer do
         IO.inspect("Received stun packed")
         attrs_list = StunPacketAttrs.parse(attrs, length)
         response_packet = generate_stun_response(transaction_id, attrs_list, hmac_key)
-
-      # :gen_udp.send(socket, ip, src_port, response_packet)
+        :gen_udp.send(socket, ip, src_port, response_packet) |> IO.inspect()
 
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
         transaction_id::integer-size(96), attrs::binary>> ->
