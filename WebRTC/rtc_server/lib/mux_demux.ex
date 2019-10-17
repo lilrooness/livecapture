@@ -43,7 +43,41 @@ defmodule RtcServer.MuxerDemuxer do
     <<message_type::binary, message_length::binary, magic_cookie::binary, transaction_id::binary>>
   end
 
-  def generate_stun_response(transaction_id, attrs, hmac_key) do
+  def generate_stun_error_response(transaction_id, attrs, hmac_key) do
+    message_type = <<0x0111::integer-size(16)>>
+    magic_cookie = <<0x2112A442::integer-size(32)>>
+
+    # error attr, ice_controlled, hmac, fingerprint
+    length = <<4 + 12 + 24 + 8::integer-size(16)>>
+
+    conflicting_roles_error_attr = <<487::integer-size(16), 0::integer-size(16)>>
+
+    # 12 bytes
+    ice_controlled =
+      <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
+
+    integrety_check_input =
+      <<message_type::binary, length::binary, magic_cookie::binary,
+        transaction_id::integer-size(96), conflicting_roles_error_attr::binary,
+        ice_controlled::binary>>
+
+    hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
+
+    # 24 bytes
+    hmac_attr = <<0x0008::integer-size(16), 0x0014::integer-size(16), hmac::binary-size(20)>>
+
+    fingerprint_input = <<integrety_check_input::binary, hmac_attr::binary>>
+
+    crc_32 = Bitwise.bxor(:erlang.crc32(fingerprint_input), @fingerprint_xor)
+
+    # 8 bytes
+    fingerprint_attr =
+      <<0x8028::integer-size(16), 0x0004::integer-size(16), crc_32::integer-size(32)>>
+
+    <<fingerprint_input::binary, fingerprint_attr::binary>>
+  end
+
+  def generate_stun_success_response(transaction_id, attrs, hmac_key) do
     message_type = <<0x0101::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
@@ -96,7 +130,7 @@ defmodule RtcServer.MuxerDemuxer do
         # Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
         IO.inspect("Received stun packed")
         attrs_list = StunPacketAttrs.parse(attrs, length)
-        response_packet = generate_stun_response(transaction_id, attrs_list, hmac_key)
+        response_packet = generate_stun_error_response(transaction_id, attrs_list, hmac_key)
         :gen_udp.send(socket, ip, src_port, response_packet) |> IO.inspect()
 
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
