@@ -47,19 +47,20 @@ defmodule RtcServer.MuxerDemuxer do
     message_type = <<0x0111::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
-    # error attr, ice_controlled, hmac, fingerprint
-    length = <<4 + 12 + 24 + 8::integer-size(16)>>
+    role_conflict_usr_message = <<"role conflict">>
+    usr_msg_size = byte_size(role_conflict_usr_message)
 
-    conflicting_roles_error_attr = <<487::integer-size(16), 0::integer-size(16)>>
+    # error attr, hmac, fingerprint
+    length = <<11 + usr_msg_size + 24 + 8::integer-size(16)>>
 
-    # 12 bytes
-    ice_controlled =
-      <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
+    conflicting_roles_error_attr =
+      <<0x0009::integer-size(16), 4 + usr_msg_size::integer-size(16), <<0x0::integer-size(21)>>,
+        4::integer-size(3), 87::integer-size(8), role_conflict_usr_message::bitstring,
+        0x0::integer-size(24)>>
 
     integrety_check_input =
       <<message_type::binary, length::binary, magic_cookie::binary,
-        transaction_id::integer-size(96), conflicting_roles_error_attr::binary,
-        ice_controlled::binary>>
+        transaction_id::integer-size(96), conflicting_roles_error_attr::binary>>
 
     hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
 
@@ -112,9 +113,6 @@ defmodule RtcServer.MuxerDemuxer do
   def handle_info(input, state) do
     {:udp, _socket, ip, src_port, data} = input
 
-    IO.inspect(src_port)
-    IO.inspect(ip)
-
     %{
       multiplexed_socket: socket,
       peer_sdp: peer_sdp
@@ -127,11 +125,21 @@ defmodule RtcServer.MuxerDemuxer do
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
-        # Logger.info("STUN BINDING REQUEST: ATTRS: #{attrs}")
-        IO.inspect("Received stun packed")
+        Logger.info("REQUEST: BINDING")
         attrs_list = StunPacketAttrs.parse(attrs, length)
-        response_packet = generate_stun_error_response(transaction_id, attrs_list, hmac_key)
-        :gen_udp.send(socket, ip, src_port, response_packet) |> IO.inspect()
+
+        response =
+          case Keyword.get(attrs_list, :ice_controlled) do
+            nil ->
+              Logger.info("RESPONSE: SUCCESS")
+              generate_stun_success_response(transaction_id, attrs_list, hmac_key)
+
+            _ ->
+              Logger.info("RESPONSE: ROLE CONFLICT")
+              generate_stun_error_response(transaction_id, attrs_list, hmac_key)
+          end
+
+        :gen_udp.send(socket, ip, src_port, response)
 
       <<0x0101::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(16),
         transaction_id::integer-size(96), attrs::binary>> ->
@@ -198,6 +206,7 @@ defmodule StunPacketAttrs do
       0x0024 -> :priority
       0x0008 -> :message_integrity
       0x8028 -> :fingerprint
+      0x0009 -> :error_code
     end
   end
 end
