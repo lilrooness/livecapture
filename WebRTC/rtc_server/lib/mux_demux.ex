@@ -203,6 +203,7 @@ defmodule StunPacketAttrs do
       0x0006 -> :username
       0xC057 -> :unknown
       0x8029 -> :ice_controlled
+      0x802A -> :ice_controlling
       0x0024 -> :priority
       0x0008 -> :message_integrity
       0x8028 -> :fingerprint
