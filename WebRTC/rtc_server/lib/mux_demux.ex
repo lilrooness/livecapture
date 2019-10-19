@@ -78,20 +78,43 @@ defmodule RtcServer.MuxerDemuxer do
     <<fingerprint_input::binary, fingerprint_attr::binary>>
   end
 
-  def generate_stun_success_response(transaction_id, attrs, hmac_key) do
+  def generate_stun_success_response(
+        transaction_id,
+        attrs,
+        hmac_key,
+        _srv_reflexive_address = {rfx_ip, rfx_port}
+      ) do
     message_type = <<0x0101::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
-    # ice_controlled, hmac, fingerprint
+    # xor_mapped_addr, hmac, fingerprint
     length = <<12 + 24 + 8::integer-size(16)>>
 
+    <<xport_key::integer-size(16), _rest::binary>> = magic_cookie
+    <<xaddr_key::integer-size(32)>> = magic_cookie
+    x_port = Bitwise.bxor(rfx_port, xport_key)
+
+    {p1, p2, p3, p4} = rfx_ip
+
+    ip_blob =
+      <<p1::integer-size(8), p2::integer-size(8), p3::integer-size(8), p4::integer-size(8)>>
+
+    <<ip_whole_integer::integer-size(32)>> = ip_blob
+
+    x_address = Bitwise.bxor(ip_whole_integer, xaddr_key)
+
+    # always assume address family IPV4 (0x01) (attr length 96bits (12B))
+    xor_mapped_address_attr =
+      <<0x0020::integer-size(16), 8::integer-size(16), 0x0::integer-size(8),
+        0x01::integer-size(8), x_port::integer-size(16), x_address::integer-size(32)>>
+
     # 12 bytes
-    ice_controlled =
-      <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
+    # ice_controlled =
+    #   <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
 
     integrety_check_input =
       <<message_type::binary, length::binary, magic_cookie::binary,
-        transaction_id::integer-size(96), ice_controlled::binary>>
+        transaction_id::integer-size(96), xor_mapped_address_attr::binary>>
 
     hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
 
@@ -132,7 +155,7 @@ defmodule RtcServer.MuxerDemuxer do
           case Keyword.get(attrs_list, :ice_controlled) do
             nil ->
               Logger.info("RESPONSE: SUCCESS")
-              generate_stun_success_response(transaction_id, attrs_list, hmac_key)
+              generate_stun_success_response(transaction_id, attrs_list, hmac_key, {ip, src_port})
 
             _ ->
               Logger.info("RESPONSE: ROLE CONFLICT")
@@ -208,6 +231,8 @@ defmodule StunPacketAttrs do
       0x0008 -> :message_integrity
       0x8028 -> :fingerprint
       0x0009 -> :error_code
+      0x0020 -> :xor_mapped_address
+      0x0001 -> :mapped_address
     end
   end
 end
