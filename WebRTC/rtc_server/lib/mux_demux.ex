@@ -44,6 +44,9 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   def generate_stun_error_response(transaction_id, attrs, hmac_key) do
+    prepped_key =
+      :stringprep.prepare(:erlang.binary_to_list(hmac_key)) |> :erlang.list_to_binary()
+
     message_type = <<0x0111::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
@@ -62,7 +65,7 @@ defmodule RtcServer.MuxerDemuxer do
       <<message_type::binary, length::binary, magic_cookie::binary,
         transaction_id::integer-size(96), conflicting_roles_error_attr::binary>>
 
-    hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
+    hmac = :crypto.hmac(:sha1, prepped_key, integrety_check_input)
 
     # 24 bytes
     hmac_attr = <<0x0008::integer-size(16), 0x0014::integer-size(16), hmac::binary-size(20)>>
@@ -84,11 +87,13 @@ defmodule RtcServer.MuxerDemuxer do
         hmac_key,
         _srv_reflexive_address = {rfx_ip, rfx_port}
       ) do
+    prepped_key = :stringprep.prepare(:erlang.binary_to_list(hmac_key))
+
     message_type = <<0x0101::integer-size(16)>>
     magic_cookie = <<0x2112A442::integer-size(32)>>
 
-    # xor_mapped_addr, hmac, fingerprint
-    length = <<12 + 24 + 8::integer-size(16)>>
+    # xor_mapped_addr, hmac
+    length = <<12 + 24::integer-size(16)>>
 
     <<xport_key::integer-size(16), _rest::binary>> = magic_cookie
     <<xaddr_key::integer-size(32)>> = magic_cookie
@@ -116,12 +121,17 @@ defmodule RtcServer.MuxerDemuxer do
       <<message_type::binary, length::binary, magic_cookie::binary,
         transaction_id::integer-size(96), xor_mapped_address_attr::binary>>
 
-    hmac = :crypto.hmac(:sha, hmac_key, integrety_check_input)
+    hmac = :crypto.hmac(:sha, prepped_key, integrety_check_input)
 
     # 24 bytes
     hmac_attr = <<0x0008::integer-size(16), 0x0014::integer-size(16), hmac::binary-size(20)>>
 
-    fingerprint_input = <<integrety_check_input::binary, hmac_attr::binary>>
+    # xor_mapped_addr, hmac, fingerprint
+    final_length = <<12 + 24 + 8::integer-size(16)>>
+
+    fingerprint_input =
+      <<message_type::binary, final_length::binary, magic_cookie::binary,
+        transaction_id::integer-size(96), xor_mapped_address_attr::binary, hmac_attr::binary>>
 
     crc_32 = Bitwise.bxor(:erlang.crc32(fingerprint_input), @fingerprint_xor)
 
@@ -132,18 +142,33 @@ defmodule RtcServer.MuxerDemuxer do
     <<fingerprint_input::binary, fingerprint_attr::binary>>
   end
 
+  defp verify_message_integrity(blob, actual_hash, hmac_key) do
+    prepped_key =
+      :stringprep.prepare(:erlang.binary_to_list(hmac_key)) |> :erlang.list_to_binary()
+
+    expected_hash = :crypto.hmac(:sha, hmac_key, blob)
+
+    IO.inspect({expected_hash, byte_size(expected_hash)}, label: "calculated", limit: :infinity)
+    IO.inspect({actual_hash, byte_size(actual_hash)}, label: "received", limit: :infinity)
+
+    Logger.info("Comparing calculated Hash #{expected_hash} with received hash #{actual_hash}")
+
+    {:ok, ^expected_hash = actual_hash}
+  end
+
   @impl true
   def handle_info(input, state) do
     {:udp, _socket, ip, src_port, data} = input
 
     %{
       multiplexed_socket: socket,
+      my_sdp: my_sdp,
       peer_sdp: peer_sdp
-      # "ice-pwd" => hmac_key
-      # }
     } = state
 
-    hmac_key = Keyword.get(peer_sdp, :"ice-pwd")
+    realm = "127.0.0.1"
+
+    hmac_key = Keyword.get(my_sdp, :"ice-pwd")
 
     case data do
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
@@ -151,11 +176,35 @@ defmodule RtcServer.MuxerDemuxer do
         Logger.info("REQUEST: BINDING")
         attrs_list = StunPacketAttrs.parse(attrs, length)
 
+        reverse_byte_position =
+          Keyword.get(attrs_list, :message_integrity)
+          |> Map.get(:reverse_byte_position)
+
+        hmac_hash =
+          Keyword.get(attrs_list, :message_integrity)
+          |> Map.get(:attr)
+
+        hmac_input_size = byte_size(data) - reverse_byte_position
+
+        <<hmac_input_blob::binary-size(hmac_input_size), _rest::binary>> = data
+
+        # verify_message_integrity(
+        #   hmac_input_blob,
+        #   hmac_hash,
+        #   hmac_key |> IO.inspect(label: "password")
+        # )
+
         response =
           case Keyword.get(attrs_list, :ice_controlled) do
             nil ->
               Logger.info("RESPONSE: SUCCESS")
-              generate_stun_success_response(transaction_id, attrs_list, hmac_key, {ip, src_port})
+
+              generate_stun_success_response(
+                transaction_id,
+                attrs_list,
+                hmac_key,
+                {ip, src_port}
+              )
 
             _ ->
               Logger.info("RESPONSE: ROLE CONFLICT")
@@ -207,6 +256,9 @@ defmodule StunPacketAttrs do
 
     type_atom = identify_attribute_type(attr_type)
 
+    # byte_size(whole_packet) - reverse_byte_position == byte index of attribute (used to calculate hmac)
+    reverse_byte_position = :erlang.byte_size(attrs_binary)
+
     # attrs are padded to the nearest multiple of 4 bytes
     padding_bytes =
       case rem(attr_length, 4) do
@@ -218,7 +270,11 @@ defmodule StunPacketAttrs do
 
     <<_padding::binary-size(padding_bytes), rest::binary>> = rest_maybe_including_padding
 
-    seperate_binary(rest, [{type_atom, {attr_length, attr}} | attrs_list])
+    seperate_binary(rest, [
+      {type_atom,
+       %{attr_length: attr_length, attr: attr, reverse_byte_position: reverse_byte_position}}
+      | attrs_list
+    ])
   end
 
   def identify_attribute_type(attr_type_binary) do
@@ -228,6 +284,7 @@ defmodule StunPacketAttrs do
       0x8029 -> :ice_controlled
       0x802A -> :ice_controlling
       0x0024 -> :priority
+      0x0025 -> :use_candidate
       0x0008 -> :message_integrity
       0x8028 -> :fingerprint
       0x0009 -> :error_code

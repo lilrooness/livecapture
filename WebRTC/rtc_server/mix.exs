@@ -26,7 +26,8 @@ defmodule RtcServer.MixProject do
       {:plug, "~> 1.7"},
       {:plug_cowboy, "~> 2.0"},
       {:jason, "~> 1.1"},
-      {:gen_state_machine, "~> 2.0"}
+      {:gen_state_machine, "~> 2.0"},
+      {:scramerl, git: "https://github.com/lilrooness/scramerl"}
     ]
   end
 end
