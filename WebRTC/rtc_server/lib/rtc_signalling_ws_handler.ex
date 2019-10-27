@@ -34,7 +34,9 @@ defmodule RtcServer.Signalling.WSHandler do
         peer_sdp = process_sdp(sdp_string)
 
         my_sdp = process_sdp(@sdpOffer)
-        RtcServer.MuxerDemuxer.start_link(my_sdp, peer_sdp)
+        # RtcServer.MuxerDemuxer.start_link(my_sdp, peer_sdp)
+        dtls_port = 9876
+        RtcServer.WebRTCSessionSup.start_session(my_sdp, peer_sdp, dtls_port)
 
       {:ok, candidate} ->
         IO.inspect(candidate, label: :candidate)

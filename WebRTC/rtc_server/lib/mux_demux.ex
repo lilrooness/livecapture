@@ -20,7 +20,7 @@ defmodule RtcServer.MuxerDemuxer do
 
   @udp_mtu 1460
 
-  def start_link(my_sdp, peer_sdp) do
+  def start_link({my_sdp, peer_sdp}) do
     IO.inspect({my_sdp, peer_sdp})
     GenServer.start_link(__MODULE__, %{my_sdp: my_sdp, peer_sdp: peer_sdp}, name: __MODULE__)
   end
@@ -163,7 +163,10 @@ defmodule RtcServer.MuxerDemuxer do
     %{
       multiplexed_socket: socket,
       my_sdp: my_sdp,
-      peer_sdp: peer_sdp
+      peer_sdp: peer_sdp,
+      non_muxed_sockets: %{
+        dtls: dtls_socket
+      }
     } = state
 
     realm = "127.0.0.1"
@@ -171,6 +174,10 @@ defmodule RtcServer.MuxerDemuxer do
     hmac_key = Keyword.get(my_sdp, :"ice-pwd")
 
     case data do
+      <<0x16::integer-size(8), 0xFEFF::integer-size(16), _rest_of_dtls_client_hello>> ->
+        # :gen_udp.send(socket, "127.0.0.1", dtls_port, data)
+        :ok
+
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
         Logger.info("REQUEST: BINDING")
@@ -222,6 +229,13 @@ defmodule RtcServer.MuxerDemuxer do
     end
 
     {:noreply, state}
+  end
+
+  def child_spec(arg) do
+    %{
+      id: arg,
+      start: {__MODULE__, :start_link, [arg]}
+    }
   end
 end
 
