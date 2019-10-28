@@ -123,10 +123,6 @@ defmodule RtcServer.MuxerDemuxer do
       <<0x0020::integer-size(16), 8::integer-size(16), 0x0::integer-size(8),
         0x01::integer-size(8), x_port::integer-size(16), x_address::integer-size(32)>>
 
-    # 12 bytes
-    # ice_controlled =
-    #   <<0x8029::integer-size(16), 8::integer-size(16), 0x44501A5A85F8AA03::integer-size(64)>>
-
     integrety_check_input =
       <<message_type::binary, length::binary, magic_cookie::binary,
         transaction_id::integer-size(96), xor_mapped_address_attr::binary>>
@@ -167,9 +163,7 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   @impl true
-  def handle_info(input, state) do
-    {:udp, _socket, ip, src_port, data} = input
-
+  def handle_info({:udp, _socket, ip, src_port, data}, state) do
     %{
       multiplexed_socket: socket,
       my_sdp: my_sdp,
