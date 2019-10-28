@@ -8,9 +8,10 @@ defmodule RtcServer.WebRTCSessionSup do
   @impl true
   def init({my_sdp, peer_sdp, dtls_port}) do
     children = [
-      {RtcServer.MuxerDemuxer, {my_sdp, peer_sdp}}
-      # {RtcServer.DTLS, [dtls_port]}
+      {RtcServer.MuxerDemuxer, {my_sdp, peer_sdp, dtls_port}}
     ]
+
+    RtcServer.DTLS.expect_dtls_client_hello(self(), dtls_port)
 
     Supervisor.init(children, strategy: :one_for_all)
   end

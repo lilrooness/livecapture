@@ -10,28 +10,38 @@ defmodule RtcServer.MuxerDemuxer do
     :my_sdp,
     :peer_sdp,
     :multiplexed_socket,
-    non_muxed_sockets: %{
-      stun: nil,
-      dtls: nil,
-      srtp: nil,
-      srtcp: nil
-    }
+    :non_muxed_ports
   ]
 
   @udp_mtu 1460
 
-  def start_link({my_sdp, peer_sdp}) do
-    IO.inspect({my_sdp, peer_sdp})
-    GenServer.start_link(__MODULE__, %{my_sdp: my_sdp, peer_sdp: peer_sdp}, name: __MODULE__)
+  def start_link({my_sdp, peer_sdp, dtls_port}) do
+    IO.inspect({my_sdp, peer_sdp, dtls_port})
+
+    GenServer.start_link(
+      __MODULE__,
+      %{
+        dtls: dtls_port,
+        my_sdp: my_sdp,
+        peer_sdp: peer_sdp
+      },
+      name: __MODULE__
+    )
   end
 
   @impl true
-  def init(%{my_sdp: my_sdp, peer_sdp: peer_sdp}) do
+  def init(%{my_sdp: my_sdp, peer_sdp: peer_sdp, dtls: dtls_port}) do
     {:ok, socket} = :gen_udp.open(9999, [{:active, true}, :binary])
 
     :crypto.start()
 
-    {:ok, %__MODULE__{multiplexed_socket: socket, my_sdp: my_sdp, peer_sdp: peer_sdp}}
+    {:ok,
+     %__MODULE__{
+       multiplexed_socket: socket,
+       my_sdp: my_sdp,
+       peer_sdp: peer_sdp,
+       non_muxed_ports: %{dtls: dtls_port}
+     }}
   end
 
   def generate_stun_payload(:binding) do
@@ -164,19 +174,19 @@ defmodule RtcServer.MuxerDemuxer do
       multiplexed_socket: socket,
       my_sdp: my_sdp,
       peer_sdp: peer_sdp,
-      non_muxed_sockets: %{
-        dtls: dtls_socket
+      non_muxed_ports: %{
+        dtls: dtls_port
       }
     } = state
 
-    realm = "127.0.0.1"
+    # realm = "127.0.0.1"
 
     hmac_key = Keyword.get(my_sdp, :"ice-pwd")
 
     case data do
-      <<0x16::integer-size(8), 0xFEFF::integer-size(16), _rest_of_dtls_client_hello>> ->
-        # :gen_udp.send(socket, "127.0.0.1", dtls_port, data)
-        :ok
+      <<22::integer-size(8), 0xFEFF::integer-size(16), _rest_of_dtls_client_hello::binary>> ->
+        Logger.info("DTLS CLIENT HELLO PACKET")
+        :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
 
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
         transaction_id::integer-size(96), attrs::binary>> ->
