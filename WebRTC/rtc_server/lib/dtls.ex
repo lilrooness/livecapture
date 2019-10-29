@@ -13,7 +13,14 @@ defmodule RtcServer.DTLS do
   end
 
   defp wait_and_handshake(port, sup_pid) do
-    {:ok, listen_socket} = :ssl.listen(port, protocol: :dtls)
+    {:ok, listen_socket} =
+      :ssl.listen(port,
+        protocol: :dtls,
+        certfile: 'priv/localhost.crt',
+        keyfile: 'priv/localhost.key',
+        verify_fun: get_custom_verify_fun_option()
+      )
+
     Logger.info("LISTENING FOR DTLS CONNECTIONS")
     {:ok, handshake_socket} = :ssl.transport_accept(listen_socket)
     Logger.info("RECEIVED CLIENT HELLO - continuing handshake ...")
@@ -22,6 +29,26 @@ defmodule RtcServer.DTLS do
     Supervisor.start_child(sup_pid, {__MODULE__, ssl_socket})
 
     Logger.info("COMPLETED DTLS HANDSHAKE")
+  end
+
+  defp get_custom_verify_fun_option() do
+    fn
+      _, {:bad_cert, :selfsigned_peer}, UserState ->
+        # Allow self-signed certificates from client
+        {:valid, UserState}
+
+      _, {:bad_cert, _} = Reason, _ ->
+        {:fail, Reason}
+
+      _, {:extension, _}, UserState ->
+        {:unknown, UserState}
+
+      _, :valid, UserState ->
+        {:valid, UserState}
+
+      _, :valid_peer, UserState ->
+        {:valid, UserState}
+    end
   end
 
   @impl true
