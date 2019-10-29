@@ -10,7 +10,9 @@ defmodule RtcServer.MuxerDemuxer do
     :my_sdp,
     :peer_sdp,
     :multiplexed_socket,
-    :non_muxed_ports
+    :non_muxed_ports,
+    :peer_ip,
+    :port_map_table_id
   ]
 
   @udp_mtu 1460
@@ -35,12 +37,15 @@ defmodule RtcServer.MuxerDemuxer do
 
     :crypto.start()
 
+    table_id = :ets.new(:port_maps, [:set])
+
     {:ok,
      %__MODULE__{
        multiplexed_socket: socket,
        my_sdp: my_sdp,
        peer_sdp: peer_sdp,
-       non_muxed_ports: %{dtls: dtls_port}
+       non_muxed_ports: %{dtls: dtls_port},
+       port_map_table_id: table_id
      }}
   end
 
@@ -163,11 +168,29 @@ defmodule RtcServer.MuxerDemuxer do
   end
 
   @impl true
+  def handle_info(
+        {:udp, _socket, ip, src_port, data},
+        %__MODULE__{
+          non_muxed_ports: %{dtls: dtls_port},
+          peer_ip: peer_ip,
+          multiplexed_socket: socket,
+          port_map_table_id: port_table_id
+        } = state
+      )
+      when src_port == dtls_port do
+    Logger.info("FORWARDING DTLS HELLO RESPONSE")
+    [{_key, peer_port}] = :ets.lookup(port_table_id, {:dtls, dtls_port})
+    :gen_udp.send(socket, peer_ip, peer_port, data)
+    {:noreply, state}
+  end
+
+  @impl true
   def handle_info({:udp, _socket, ip, src_port, data}, state) do
     %{
       multiplexed_socket: socket,
       my_sdp: my_sdp,
       peer_sdp: peer_sdp,
+      port_map_table_id: port_table_id,
       non_muxed_ports: %{
         dtls: dtls_port
       }
@@ -179,7 +202,9 @@ defmodule RtcServer.MuxerDemuxer do
 
     case data do
       <<22::integer-size(8), 0xFEFF::integer-size(16), _rest_of_dtls_client_hello::binary>> ->
-        Logger.info("DTLS CLIENT HELLO PACKET")
+        Logger.info("FORWARNING DTLS CLIENT HELLO PACKET")
+        # set the port for dtls to be the src port for this packet so we can forward the response
+        :ets.insert_new(port_table_id, {{:dtls, dtls_port}, src_port})
         :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
 
       <<0x0001::integer-size(16), length::integer-size(16), 0x2112A442::integer-size(32),
@@ -232,7 +257,7 @@ defmodule RtcServer.MuxerDemuxer do
         Logger.info("SOMETHING ELSE IS ARRIVING")
     end
 
-    {:noreply, state}
+    {:noreply, state |> Map.put(:peer_ip, ip)}
   end
 
   def child_spec(arg) do
