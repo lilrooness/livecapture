@@ -66,9 +66,34 @@ defmodule RtcServer.DTLS do
   end
 
   @impl true
-  def handle_info({:ssl, _socket, data}, state) do
-    IO.inspect(data |> Base.encode16())
+  def handle_info(
+        {:ssl, _socket,
+         <<source_port::integer-size(16), dst_port::integer-size(16), veri_tag::integer-size(32),
+           checksum::integer-size(32), type::integer-size(8), _not_read::integer-size(8),
+           length::integer-size(16), tsn::integer-size(32), stream_id::integer-size(16),
+           stream_sq_num::integer-size(16), ppid::integer-size(32), payload::binary>> = data},
+        state
+      ) do
+    %{
+      source_port: source_port,
+      dst_port: dst_port,
+      veri_tag: veri_tag,
+      checksum: checksum,
+      type: type,
+      length: length,
+      tsn: tsn,
+      stream_id: stream_id,
+      stream_sq_num: stream_sq_num,
+      ppid: ppid,
+      payload: payload
+    }
+    |> IO.inspect()
 
+    {:noreply, state}
+  end
+
+  def handle_info({:ssl, _socket, data}, state) do
+    Logger.warn("RECEIVED NON SRTP-PACKET")
     {:noreply, state}
   end
 
