@@ -14,11 +14,14 @@ defmodule RtcServer.DTLS do
 
   defp wait_and_handshake(port, sup_pid) do
     {:ok, listen_socket} =
-      :ssl.listen(port,
-        protocol: :dtls,
-        certfile: 'priv/localhost.crt',
-        keyfile: 'priv/localhost.key',
-        verify_fun: get_custom_verify_fun_option()
+      :ssl.listen(
+        port,
+        [
+          protocol: :dtls,
+          certfile: 'priv/localhost.crt',
+          keyfile: 'priv/localhost.key',
+          verify_fun: get_custom_verify_fun_option()
+        ] ++ [:binary]
       )
 
     Logger.info("LISTENING FOR DTLS CONNECTIONS")
@@ -64,7 +67,7 @@ defmodule RtcServer.DTLS do
 
   @impl true
   def handle_info({:ssl, _socket, data}, state) do
-    IO.inspect(data)
+    IO.inspect(data |> Base.encode16())
 
     {:noreply, state}
   end
