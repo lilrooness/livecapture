@@ -1,7 +1,7 @@
 defmodule RtcServer.Signalling.WSHandler do
   @behaviour :cowboy_websocket
 
-  @sdpOffer ~s(v=0\no=- 4540707994449696028 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE data\na=msid-semantic: WMS\na=ice-lite\na=ice-pwd:asd88fgpdd777uzjYhagZg\na=ice-ufrag:8hhY\nm=application 9 DTLS/SCTP 9999\nc=IN IP4 127.0.0.1\na=candidate:0 1 UDP 2130706431 127.0.0.1 9999 typ host\na=fingerprint:sha-256 F2:B8:CE:D8:3C:E0:98:2B:BD:61:2D:3F:77:01:61:76:0A:A7:02:50:53:EF:3E:4E:37:22:40:68:0B:06:A7:C8\na=setup:actpass\na=mid:data\na=sctpmap:9999 webrtc-datachannel 1024\n)
+  @sdpOffer ~s(v=0\no=- 4540707994449696028 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE data\na=msid-semantic: WMS\na=ice-lite\na=ice-pwd:asd88fgpdd777uzjYhagZg\na=ice-ufrag:8hhY\nm=application 9 DTLS/SCTP 9999\nc=IN IP4 127.0.0.1\na=candidate:0 1 UDP 2130706431 127.0.0.1 9999 typ host\na=fingerprint:sha-256 61:3A:01:36:17:7C:CA:C9:21:65:27:53:C2:B6:F4:72:DC:6C:28:66:34:69:36:67:03:90:D1:50:4B:4B:02:D5\na=setup:actpass\na=mid:data\na=sctpmap:9999 webrtc-datachannel 1024\n)
 
   def init(request, _state) do
     state = %{registry_key: request.path}

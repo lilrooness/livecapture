@@ -201,9 +201,16 @@ defmodule RtcServer.MuxerDemuxer do
     hmac_key = Keyword.get(my_sdp, :"ice-pwd")
 
     case data do
-      <<22::integer-size(8), 0xFEFF::integer-size(16), _rest_of_dtls_client_hello::binary>> ->
-        Logger.info("FORWARNING DTLS CLIENT HELLO PACKET")
+      <<22::integer-size(8), version::integer-size(16), _rest_of_dtls_client_hello::binary>>
+      when version == 0xFEFF or version == 0xFEFD ->
+        Logger.info("FORWARDING DTLS CLIENT HELLO PACKET")
         # set the port for dtls to be the src port for this packet so we can forward the response
+        :ets.insert_new(port_table_id, {{:dtls, dtls_port}, src_port})
+        :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
+
+      <<23::integer-size(8), version::integer-size(16), _rest_of_dtls_client_app_data::binary>>
+      when version == 0xFEFD ->
+        Logger.info("FORWARDING DTLS APPLICATION DATA")
         :ets.insert_new(port_table_id, {{:dtls, dtls_port}, src_port})
         :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
 
@@ -255,6 +262,7 @@ defmodule RtcServer.MuxerDemuxer do
 
       _ ->
         Logger.info("SOMETHING ELSE IS ARRIVING")
+        IO.inspect(data |> Base.encode16())
     end
 
     {:noreply, state |> Map.put(:peer_ip, ip)}

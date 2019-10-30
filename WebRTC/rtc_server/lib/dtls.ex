@@ -65,5 +65,18 @@ defmodule RtcServer.DTLS do
   @impl true
   def handle_info({:ssl, _socket, data}, state) do
     IO.inspect(data)
+
+    {:noreply, state}
+  end
+
+  @impl true
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      type: :worker,
+      restart: :permanent,
+      shutdown: 500
+    }
   end
 end
