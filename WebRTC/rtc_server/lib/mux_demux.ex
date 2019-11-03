@@ -178,7 +178,7 @@ defmodule RtcServer.MuxerDemuxer do
         } = state
       )
       when src_port == dtls_port do
-    Logger.info("FORWARDING DTLS HELLO RESPONSE")
+    Logger.info("FORWARDING DTLS PACKET TO PEER")
     [{_key, peer_port}] = :ets.lookup(port_table_id, {:dtls, dtls_port})
     :gen_udp.send(socket, peer_ip, peer_port, data)
     {:noreply, state}

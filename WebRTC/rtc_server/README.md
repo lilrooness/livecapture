@@ -1,5 +1,7 @@
 # RtcServer
 
+Big thanks to @tomciopp for the [crc32c implementation](https://gist.github.com/tomciopp/2d174f3960b6386e86167268b1a9875d)
+
 **TODO: Add description**
 
 ## Installation
@@ -18,4 +20,3 @@ end
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/rtc_server](https://hexdocs.pm/rtc_server).
-

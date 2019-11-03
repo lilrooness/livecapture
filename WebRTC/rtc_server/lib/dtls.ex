@@ -4,7 +4,8 @@ defmodule RtcServer.DTLS do
   require Logger
 
   defstruct [
-    :ssl_socket
+    :ssl_socket,
+    :debug_dump_file
   ]
 
   def expect_dtls_client_hello(sup_pid, dtls_port) do
@@ -61,8 +62,9 @@ defmodule RtcServer.DTLS do
 
   @impl true
   def init(ssl_socket) do
+    {:ok, handle} = File.open!("debug_dump", [:write])
     :ssl.controlling_process(ssl_socket, self())
-    {:ok, %__MODULE__{ssl_socket: ssl_socket}}
+    {:ok, %__MODULE__{ssl_socket: ssl_socket, debug_dump_file: handle}}
   end
 
   @impl true
@@ -70,30 +72,42 @@ defmodule RtcServer.DTLS do
         {:ssl, _socket,
          <<source_port::integer-size(16), dst_port::integer-size(16), veri_tag::integer-size(32),
            checksum::integer-size(32), type::integer-size(8), _not_read::integer-size(8),
-           length::integer-size(16), tsn::integer-size(32), stream_id::integer-size(16),
-           stream_sq_num::integer-size(16), ppid::integer-size(32), payload::binary>> = data},
-        state
+           length::integer-size(16), initiate_tag::integer-size(32), window::integer-size(32),
+           n_outbound_streams::integer-size(16), n_inbound_streams::integer-size(16),
+           initial_tsn::integer-size(32), payload::binary>> = data},
+        %__MODULE__{ssl_socket: ssl_socket, debug_dump_file: debug_dump_file} = state
       ) do
-    %{
-      source_port: source_port,
-      dst_port: dst_port,
-      veri_tag: veri_tag,
-      checksum: checksum,
-      type: type,
-      length: length,
-      tsn: tsn,
-      stream_id: stream_id,
-      stream_sq_num: stream_sq_num,
-      ppid: ppid,
-      payload: payload
-    }
-    |> IO.inspect()
+    IO.inspect(data, limit: :infinity)
+
+    # debug_packet(debug_socket, data)
+
+    response =
+      %{
+        window: window,
+        source_port: source_port,
+        dst_port: dst_port,
+        veri_tag: veri_tag,
+        checksum: checksum,
+        type: type,
+        length: length,
+        initiate_tag: initiate_tag,
+        initial_tsn: initial_tsn,
+        n_outbound_streams: n_outbound_streams,
+        n_inbound_streams: n_inbound_streams,
+        payload: payload
+      }
+      |> IO.inspect()
+      |> construct_sctp_init_ack()
+
+    debug_packet(debug_dump_file, response)
+    :ssl.send(ssl_socket, response)
 
     {:noreply, state}
   end
 
   def handle_info({:ssl, _socket, data}, state) do
-    Logger.warn("RECEIVED NON SRTP-PACKET")
+    Logger.warn("RECEIVED NON HANDLED-PACKET ...")
+    IO.inspect(data |> Base.encode16())
     {:noreply, state}
   end
 
@@ -106,5 +120,53 @@ defmodule RtcServer.DTLS do
       restart: :permanent,
       shutdown: 500
     }
+  end
+
+  defp construct_sctp_init_ack(
+         %{
+           window: window,
+           source_port: source_port,
+           dst_port: dst_port,
+           veri_tag: veri_tag,
+           checksum: checksum,
+           type: type,
+           length: length,
+           initiate_tag: initiate_tag,
+           initial_tsn: initial_tsn,
+           n_outbound_streams: n_outbound_streams,
+           n_inbound_streams: n_inbound_streams,
+           payload: payload
+         } = _init_packet
+       ) do
+    cookie =
+      <<0x00000EB0000010000011001100003614432325440000FFFF001100115CFE379F070007000000000000000000A285B13F1027000017CD8F1C11769B0455C0D0F22C3E7C3500010001000000000000000000050008C0A8AA3800050008C0A8AA08C0000004::integer-size(
+          800
+        )>>
+
+    cookie_param = <<7::integer-size(16), byte_size(cookie) + 32::integer-size(16)>> <> cookie
+    chunk_length = 20 + byte_size(cookie_param)
+
+    response_outbound_streams = 1024
+    response_inbound_streams = n_outbound_streams
+
+    chunk =
+      <<2::integer-size(8), 0::integer-size(8), chunk_length::integer-size(16),
+        initiate_tag::integer-size(32), window::integer-size(32),
+        response_outbound_streams::integer-size(16), response_inbound_streams::integer-size(16),
+        initial_tsn::integer-size(32)>> <> cookie_param
+
+    header_without_checksum =
+      <<dst_port::integer-size(16), source_port::integer-size(16), initiate_tag::integer-size(32),
+        0::integer-size(32)>>
+
+    crc32c_checksum = CyclicRedundancyCheck.crc32c(header_without_checksum <> chunk)
+
+    <<9999::integer-size(16), 5000::integer-size(16), veri_tag::integer-size(32),
+      crc32c_checksum::integer-size(32)>> <> chunk
+  end
+
+  defp debug_packet(file_handle, data) do
+    {:ok, handle} = File.open("dump", [:write])
+    IO.binwrite(handle, data)
   end
 end
