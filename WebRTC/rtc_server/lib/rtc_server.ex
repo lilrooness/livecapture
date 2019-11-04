@@ -14,7 +14,8 @@ defmodule RtcServer do
       Registry.child_spec(
         keys: :duplicate,
         name: Registry.RTCServer
-      )
+      ),
+      SCTPDebugDump.child_spec()
     ]
 
     opts = [strategy: :one_for_one, name: MyWebsocketApp.Application]

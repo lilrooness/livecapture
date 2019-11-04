@@ -79,6 +79,7 @@ defmodule RtcServer.DTLS do
     IO.inspect(data, limit: :infinity)
 
     # debug_packet(debug_dump_file, data)
+    SCTPDebugDump.log(data)
 
     response =
       %{
@@ -99,6 +100,7 @@ defmodule RtcServer.DTLS do
       |> construct_sctp_init_ack()
 
     # debug_packet(debug_dump_file, response)
+    SCTPDebugDump.log(response)
     :ssl.send(ssl_socket, response)
 
     {:noreply, state}
@@ -148,7 +150,7 @@ defmodule RtcServer.DTLS do
         )>>
 
     cookie_param = <<7::integer-size(16), byte_size(cookie) + 32::integer-size(16)>> <> cookie
-    chunk_length = 20 + byte_size(cookie_param)
+    chunk_length = (20 + byte_size(cookie_param)) |> IO.inspect(label: "chunk length")
 
     response_outbound_streams = 1024
     response_inbound_streams = n_outbound_streams
