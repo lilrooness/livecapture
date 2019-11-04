@@ -19,7 +19,7 @@ iex -S mix
 ## The Code
 
 Most of the Heavey lifting is done in `mux_demux.ex` and `dtls.ex`
-As the names suggest, `mux_demux.ex` is responsible for multiplexing and demultiplexing traffic from and to google chrome.
+As the names suggest, `mux_demux.ex` is responsible for multiplexing and demultiplexing traffic from and to google chrome, while `dtls.ex` is responsible for handling dtls traffic (the SCTP handing code is currently also in `dtls.ex`).
 
 While perusing the code, you may be disturbed by things like this:
 ![And other tasty nuggets ...](https://github.com/lilrooness/livecapture/blob/master/.readme_screenshots/screenshot_1.png)
