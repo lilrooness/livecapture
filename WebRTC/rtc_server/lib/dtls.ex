@@ -4,8 +4,7 @@ defmodule RtcServer.DTLS do
   require Logger
 
   defstruct [
-    :ssl_socket,
-    :debug_dump_file
+    :ssl_socket
   ]
 
   def expect_dtls_client_hello(sup_pid, dtls_port) do
@@ -62,9 +61,9 @@ defmodule RtcServer.DTLS do
 
   @impl true
   def init(ssl_socket) do
-    {:ok, handle} = File.open!("debug_dump", [:write])
     :ssl.controlling_process(ssl_socket, self())
-    {:ok, %__MODULE__{ssl_socket: ssl_socket, debug_dump_file: handle}}
+    # {:ok, handle} = File.open!("debug_dump", [:write])
+    {:ok, %__MODULE__{ssl_socket: ssl_socket}}
   end
 
   @impl true
@@ -75,11 +74,11 @@ defmodule RtcServer.DTLS do
            length::integer-size(16), initiate_tag::integer-size(32), window::integer-size(32),
            n_outbound_streams::integer-size(16), n_inbound_streams::integer-size(16),
            initial_tsn::integer-size(32), payload::binary>> = data},
-        %__MODULE__{ssl_socket: ssl_socket, debug_dump_file: debug_dump_file} = state
+        %__MODULE__{ssl_socket: ssl_socket} = state
       ) do
     IO.inspect(data, limit: :infinity)
 
-    # debug_packet(debug_socket, data)
+    # debug_packet(debug_dump_file, data)
 
     response =
       %{
@@ -99,15 +98,20 @@ defmodule RtcServer.DTLS do
       |> IO.inspect()
       |> construct_sctp_init_ack()
 
-    debug_packet(debug_dump_file, response)
+    # debug_packet(debug_dump_file, response)
     :ssl.send(ssl_socket, response)
 
     {:noreply, state}
   end
 
   def handle_info({:ssl, _socket, data}, state) do
-    Logger.warn("RECEIVED NON HANDLED-PACKET ...")
+    Logger.info("RECEIVED NON HANDLED-PACKET ...")
     IO.inspect(data |> Base.encode16())
+    {:noreply, state}
+  end
+
+  def handle_info(something, state) do
+    IO.inspect(something, label: "weird ...")
     {:noreply, state}
   end
 
@@ -166,7 +170,8 @@ defmodule RtcServer.DTLS do
   end
 
   defp debug_packet(file_handle, data) do
-    {:ok, handle} = File.open("dump", [:write])
-    IO.binwrite(handle, data)
+    # {:ok, handle} = File.open("dump", [:write])
+    # IO.inspect(data, label: "LOG DEBUG DATA")
+    # :ok = IO.binwrite(file_handle, data)
   end
 end

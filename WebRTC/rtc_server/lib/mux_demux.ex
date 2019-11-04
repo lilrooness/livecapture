@@ -208,6 +208,12 @@ defmodule RtcServer.MuxerDemuxer do
         :ets.insert_new(port_table_id, {{:dtls, dtls_port}, src_port})
         :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
 
+      <<21::integer-size(8), version::integer-size(16), _rest_of_dtls_client_hello::binary>>
+      when version == 0xFEFF or version == 0xFEFD ->
+        Logger.info("FORWARDING DTLS CLIENT ALERT PACKET")
+        :ets.insert_new(port_table_id, {{:dtls, dtls_port}, src_port})
+        :gen_udp.send(socket, {127, 0, 0, 1}, dtls_port, data)
+
       <<23::integer-size(8), version::integer-size(16), _rest_of_dtls_client_app_data::binary>>
       when version == 0xFEFD ->
         Logger.info("FORWARDING DTLS APPLICATION DATA")
