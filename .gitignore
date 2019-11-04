@@ -1,4 +1,4 @@
-
+.debug_hexdump
 .elixir_ls/
 debug_logs/*
 *.beam
