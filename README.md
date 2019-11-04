@@ -4,7 +4,7 @@ Implementation of an ICE-LITE WebRTC peer for streaming games to the browser
 
 This for some reason, does not work with Firefox, I suspect it's because Firefox has a stricter implemetation than chrome has.
 
-Running this project
+## Running this project
 
 1. Run this command from the root of the repository
 
