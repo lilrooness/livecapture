@@ -149,7 +149,7 @@ defmodule RtcServer.DTLS do
           800
         )>>
 
-    cookie_param = <<7::integer-size(16), byte_size(cookie) + 32::integer-size(16)>> <> cookie
+    cookie_param = <<7::integer-size(16), byte_size(cookie) + 4::integer-size(16)>> <> cookie
     chunk_length = (20 + byte_size(cookie_param)) |> IO.inspect(label: "chunk length")
 
     response_outbound_streams = 1024
