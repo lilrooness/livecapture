@@ -1,5 +1,7 @@
 
-WebRTC/rtc_server/.elixir_ls/
-WebRTC/rtc_server/debug_logs/*
+.elixir_ls/
+debug_logs/*
 *.beam
 .DS_STORE
+deps
+_build
