@@ -5,18 +5,19 @@ defmodule SCTPDebugDump do
   def start_link() do
     Agent.start_link(
       fn ->
-        File.open!("debug_dump", [:write])
+        0
       end,
       name: __MODULE__
     )
   end
 
   def log(dump) do
-    Agent.update(__MODULE__, fn handle ->
+    Agent.update(__MODULE__, fn counter ->
       Logger.info("DEBUG - Logging SCTP packet")
-      IO.binwrite(handle, "NEWPACKET")
+      handle = File.open!("debug_logs/debug_dump_#{counter}", [:write])
       IO.binwrite(handle, dump)
-      handle
+      File.close(handle)
+      counter + 1
     end)
   end
 

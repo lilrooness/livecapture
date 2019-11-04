@@ -1,3 +1,4 @@
 
 WebRTC/rtc_server/.elixir_ls/
+WebRTC/rtc_server/debug_logs/*
 *.beam
