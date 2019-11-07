@@ -1,33 +1,30 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <usrsctp.h>
-
-int read_fixed(char *buffer, int length)
-{
-    return read(STDIN_FILENO, buffer, length);
-}
+#include <string.h>
 
 int main(int argc, char **argv)
 {
     char length_buffer[2];
 
-    int bytes_read = read_fixed(length_buffer, 2);
+    char read_buffer[64000];
 
-    int read_buffer[64000]; // buffer size set to UDP MTU because why not
-
-    while (bytes_read != 0)
+    while (read(STDIN_FILENO, length_buffer, 2) > -1)
     {
-        uint16_t *packet_length = length_buffer;
-        printf("INFO: reading packet of size %d\n", *packet_length);
-        int packet_bytes_read = read_fixed(read_buffer, *packet_length);
-        if (packet_bytes_read != packet_length)
-        {
-            printf("ERROR: expected packet size: %d read: %d\n", *packet_length, packet_bytes_read);
-            return 1;
-        }
-    }
+        int tmp = length_buffer[0];
+        length_buffer[0] = length_buffer[1];
+        length_buffer[1] = tmp;
 
-    printf("INFO: reached EOS - ending program\n");
+        // after reversing byte order, cast the char array to a uint16
+        uint16_t *packet_length = length_buffer;
+
+        read(STDIN_FILENO, read_buffer, *packet_length);
+
+        // write length header (reverse endian) then data
+        uint16_t len_param = 0x0800;
+        write(STDOUT_FILENO, &len_param, 2);
+        write(STDOUT_FILENO, "received", 8);
+    }
 
     return 0;
 }
