@@ -78,6 +78,8 @@ defmodule RtcServer.DTLS do
       ) do
     IO.inspect(data, limit: :infinity)
 
+    verify_sctp_packet(data)
+
     # debug_packet(debug_dump_file, data)
     SCTPDebugDump.log(data)
 
@@ -128,12 +130,31 @@ defmodule RtcServer.DTLS do
     }
   end
 
+  defp verify_sctp_packet(
+         <<source_port::integer-size(16), dst_port::integer-size(16), veri_tag::integer-size(32),
+           checksum::integer-size(32), type::integer-size(8), not_read::integer-size(8),
+           length::integer-size(16), initiate_tag::integer-size(32), window::integer-size(32),
+           n_outbound_streams::integer-size(16), n_inbound_streams::integer-size(16),
+           initial_tsn::integer-size(32), payload::binary>>
+       ) do
+    calculated_crc23c_checksum =
+      CyclicRedundancyCheck.crc32c(
+        <<source_port::integer-size(16), dst_port::integer-size(16), veri_tag::integer-size(32),
+          0::integer-size(32), type::integer-size(8), not_read::integer-size(8),
+          length::integer-size(16), initiate_tag::integer-size(32), window::integer-size(32),
+          n_outbound_streams::integer-size(16), n_inbound_streams::integer-size(16),
+          initial_tsn::integer-size(32), payload::binary>>
+      )
+
+    ^checksum = calculated_crc23c_checksum
+  end
+
   defp construct_sctp_init_ack(
          %{
            window: window,
            source_port: source_port,
            dst_port: dst_port,
-           veri_tag: veri_tag,
+           veri_tag: _veri_tag,
            checksum: checksum,
            type: type,
            length: length,
@@ -167,13 +188,7 @@ defmodule RtcServer.DTLS do
 
     crc32c_checksum = CyclicRedundancyCheck.crc32c(header_without_checksum <> chunk)
 
-    <<9999::integer-size(16), 5000::integer-size(16), veri_tag::integer-size(32),
+    <<dst_port::integer-size(16), source_port::integer-size(16), initiate_tag::integer-size(32),
       crc32c_checksum::integer-size(32)>> <> chunk
-  end
-
-  defp debug_packet(file_handle, data) do
-    # {:ok, handle} = File.open("dump", [:write])
-    # IO.inspect(data, label: "LOG DEBUG DATA")
-    # :ok = IO.binwrite(file_handle, data)
   end
 end
