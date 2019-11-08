@@ -3,6 +3,20 @@
 #include <usrsctp.h>
 #include <string.h>
 
+int write_fixed(char *buffer, uint16_t length)
+{
+    // reverse the endian of the length for the packet header
+    uint16_t header_length_field = length;
+    char *length_bytes = &header_length_field;
+    char tmp = length_bytes[0];
+    length_bytes[0] = length_bytes[1];
+    length_bytes[1] = tmp;
+
+    // write length packet header
+    write(STDOUT_FILENO, &header_length_field, 2);
+    return write(STDOUT_FILENO, buffer, length);
+}
+
 int main(int argc, char **argv)
 {
     char length_buffer[2];
@@ -20,10 +34,7 @@ int main(int argc, char **argv)
 
         read(STDIN_FILENO, read_buffer, *packet_length);
 
-        // write length header (reverse endian) then data
-        uint16_t len_param = 0x0800;
-        write(STDOUT_FILENO, &len_param, 2);
-        write(STDOUT_FILENO, "received", 8);
+        write_fixed("received", 8);
     }
 
     return 0;

@@ -1,4 +1,4 @@
 port:
-	gcc sctp_port/src/*.c -o priv/c/sctp_port
+	gcc sctp_port/src/*.c -lusrsctp -o priv/c/sctp_port
 
 
