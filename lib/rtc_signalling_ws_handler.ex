@@ -1,7 +1,8 @@
 defmodule RtcServer.Signalling.WSHandler do
   @behaviour :cowboy_websocket
 
-  @sdpOffer ~s(v=0\no=- 4540707994449696028 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE data\na=msid-semantic: WMS\na=ice-lite\na=ice-pwd:asd88fgpdd777uzjYhagZg\na=ice-ufrag:8hhY\nm=application 9 DTLS/SCTP 9999\nc=IN IP4 127.0.0.1\na=candidate:0 1 UDP 2130706431 127.0.0.1 9999 typ host\na=fingerprint:sha-256 61:3A:01:36:17:7C:CA:C9:21:65:27:53:C2:B6:F4:72:DC:6C:28:66:34:69:36:67:03:90:D1:50:4B:4B:02:D5\na=setup:actpass\na=mid:data\na=sctpmap:9999 webrtc-datachannel 1024\n)
+  # @sdpOffer ~s(v=0\no=- 4540707994449696028 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE data\na=msid-semantic: WMS\na=ice-lite\na=ice-pwd:asd88fgpdd777uzjYhagZg\na=ice-ufrag:8hhY\nm=application 9 DTLS/SCTP 9999\nc=IN IP4 127.0.0.1\na=candidate:0 1 UDP 2130706431 127.0.0.1 9999 typ host\na=fingerprint:sha-256 61:3A:01:36:17:7C:CA:C9:21:65:27:53:C2:B6:F4:72:DC:6C:28:66:34:69:36:67:03:90:D1:50:4B:4B:02:D5\na=setup:actpass\na=mid:data\na=sctpmap:9999 webrtc-datachannel 1024\n)
+  @sdpOffer ~s(v=0\no=- 4540707994449696028 2 IN IP4 127.0.0.1\ns=-\nt=0 0\na=group:BUNDLE video\na=msid-semantic: WMS\na=ice-lite\na=ice-pwd:asd88fgpdd777uzjYhagZg\na=ice-ufrag:8hhY\nm=video 9999 UDP/TLS/RTP/SAVPF 120\nc=IN IP4 127.0.0.1\na=mid:video\na=candidate:0 1 UDP 2130706431 127.0.0.1 9999 typ host\na=fingerprint:sha-256 61:3A:01:36:17:7C:CA:C9:21:65:27:53:C2:B6:F4:72:DC:6C:28:66:34:69:36:67:03:90:D1:50:4B:4B:02:D5\na=setup:actpass\na=sendonly\na=rtcp-mux\na=rtpmap:120 VP8/90000\n)
 
   def init(request, _state) do
     state = %{registry_key: request.path}
@@ -56,18 +57,27 @@ defmodule RtcServer.Signalling.WSHandler do
     sdp_string
     |> String.split("\n")
     |> Enum.map(fn line ->
-      with [key] <- String.split(line, "=") do
+      with [key] <- String.trim(line) |> String.split("=") do
         {String.to_atom(key), ""}
       else
         ["a", "ice-lite"] ->
           {:a, "ice-lite"}
 
+        ["a", "recvonly"] ->
+          {:a, "recvonly"}
+
+        ["a", "rtcp-mux"] ->
+          {:a, "rtcp-mux"}
+
+        ["a", "sendonly"] ->
+          {:a, "sendonly"}
+
         ["a", value] ->
           [inner_k, inner_v] = value |> String.split(":", parts: 2)
-          {String.to_atom(inner_k), String.strip(inner_v)}
+          {String.to_atom(inner_k), inner_v}
 
         [key, value] ->
-          {String.to_atom(key), String.strip(value)}
+          {String.to_atom(key), value}
       end
     end)
   end

@@ -17,7 +17,7 @@ int write_fixed(char *buffer, uint16_t length)
     return write(STDOUT_FILENO, buffer, length);
 }
 
-int main(int argc, char **argv)
+void read_write()
 {
     char length_buffer[2];
 
@@ -36,6 +36,18 @@ int main(int argc, char **argv)
 
         write_fixed("received", 8);
     }
+
+    return;
+}
+
+int main(int argc, char **argv)
+{
+    usrsctp_init(9899, NULL, NULL);
+    // usrsctp_socket(PF_INET6, SOCK_STREAM, IPPROTO_SCTP, )
+
+    read_write();
+
+    usrsctp_finish();
 
     return 0;
 }
