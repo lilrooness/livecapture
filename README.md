@@ -41,9 +41,11 @@ Please note the SCTP handshake does not work yet, there is something wrong with 
 - [x] SDP Offer Exchange
 - [x] Stun Binding Request + Response
 - [x] DTLS Handshake
+- [ ] SRTP Video packets FFMPEG >--[RTP]--> Elixir >--[SRTP]--> chrome
+- [ ] Commands using websockets (to be replaced with datachannels once we figure out how to use the libusrsctp properly...
+
+Not part of MVP
 - [ ] SCTP Handshake
 - [ ] WebRTC Datachannels
-- [ ] SRTP Video packets FFMPEG >--[RTP]--> Elixir >--[SRTP]--> chrome
-- [ ] Draw the rest of the owl...?
 
 Big thanks to @tomciopp for the [crc32c implementation](https://gist.github.com/tomciopp/2d174f3960b6386e86167268b1a9875d)
