@@ -6,4 +6,5 @@ debug_logs/*
 deps
 _build
 priv/c/sctp_port
-
+*.mp4
+*.mkv

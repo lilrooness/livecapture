@@ -35,6 +35,9 @@ defmodule RtcServer.MuxerDemuxer do
   def init(%{my_sdp: my_sdp, peer_sdp: peer_sdp, dtls: dtls_port}) do
     {:ok, socket} = :gen_udp.open(9999, [{:active, true}, :binary])
 
+    srtp_in_port = 20000
+    {:ok, _srtp_udp_socket} = :gen_udp.open(srtp_in_port, [{:active, true}, :binary])
+
     :crypto.start()
 
     table_id = :ets.new(:port_maps, [:set])
@@ -44,7 +47,7 @@ defmodule RtcServer.MuxerDemuxer do
        multiplexed_socket: socket,
        my_sdp: my_sdp,
        peer_sdp: peer_sdp,
-       non_muxed_ports: %{dtls: dtls_port},
+       non_muxed_ports: %{dtls: dtls_port, srtp: srtp_in_port},
        port_map_table_id: table_id
      }}
   end
@@ -179,6 +182,23 @@ defmodule RtcServer.MuxerDemuxer do
       )
       when src_port == dtls_port do
     Logger.info("FORWARDING DTLS PACKET TO PEER")
+    [{_key, peer_port}] = :ets.lookup(port_table_id, {:dtls, dtls_port})
+    :gen_udp.send(socket, peer_ip, peer_port, data)
+    {:noreply, state}
+  end
+
+  @impl true
+  def handle_info(
+        {:udp, _socket, ip, src_port, data},
+        %__MODULE__{
+          non_muxed_ports: %{srtp: srtp_port, dtls: dtls_port},
+          peer_ip: peer_ip,
+          multiplexed_socket: socket,
+          port_map_table_id: port_table_id
+        } = state
+      )
+      when src_port == srtp_port do
+    Logger.info("FORWARDING SRTP PACKET TO PEER")
     [{_key, peer_port}] = :ets.lookup(port_table_id, {:dtls, dtls_port})
     :gen_udp.send(socket, peer_ip, peer_port, data)
     {:noreply, state}
