@@ -29,6 +29,9 @@ defmodule RtcServer.DTLS do
     Logger.info("RECEIVED CLIENT HELLO - continuing handshake ...")
     {:ok, ssl_socket} = :ssl.handshake(handshake_socket)
 
+    {:ok, [master_secret: master_secret]} =
+      :ssl.connection_information(ssl_socket, [:master_secret])
+
     Supervisor.start_child(sup_pid, {__MODULE__, ssl_socket})
 
     Logger.info("COMPLETED DTLS HANDSHAKE")

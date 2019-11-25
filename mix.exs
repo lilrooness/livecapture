@@ -28,7 +28,8 @@ defmodule RtcServer.MixProject do
       {:jason, "~> 1.1"},
       {:gen_state_machine, "~> 2.0"},
       {:scramerl, git: "https://github.com/lilrooness/scramerl"},
-      {:elixir_make, "~> 0.6.0"}
+      {:elixir_make, "~> 0.6.0"},
+      {:porcelain, "~> 2.0"}
     ]
   end
 end

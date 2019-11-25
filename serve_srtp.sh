@@ -1,1 +1,1 @@
-ffmpeg -re -i BigBuckBunny.mp4 -f rtp_mpegts -acodec mp3 -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz srtp://127.0.0.1:20000
+ffmpeg -re -i BigBuckBunny.mp4 -f rtp_mpegts -acodec mp3 -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params 7219EDC414328EEB2E8F81CC4528AEABF3AA20EEBA85DB372E343F9C02A17C9454E0C483A78A8D3DFB1D6716FC028814 srtp://127.0.0.1:20000
