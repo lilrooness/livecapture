@@ -294,9 +294,22 @@ defmodule RtcServer.MuxerDemuxer do
     {:noreply, state |> Map.put(:peer_ip, ip)}
   end
 
+  def handle_cast(
+        {:srtp_packet, data},
+        state = %__MODULE__{
+          peer_ip: peer_ip,
+          peer_sdp: peer_sdp,
+          multiplexed_socket: socket
+        }
+      ) do
+    # TODO: get peer port for SRTP traffic from peer_sdp
+    # TODO: forward data to peer through muxed socket
+    {:noreply, state}
+  end
+
   def child_spec(arg) do
     %{
-      id: arg,
+      id: __MODULE__,
       start: {__MODULE__, :start_link, [arg]}
     }
   end

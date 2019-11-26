@@ -34,6 +34,13 @@ defmodule RtcServer.DTLS do
 
     Supervisor.start_child(sup_pid, {__MODULE__, ssl_socket})
 
+    {RtcServer.MuxerDemuxer, pid, :worker, _} =
+      Supervisor.which_children(sup_pid)
+      |> Enum.find(&(&1 |> Tuple.to_list() |> hd == RtcServer.MuxerDemuxer))
+      |> IO.inspect()
+
+    Supervisor.start_child(sup_pid, {RtcServer.SRTPReceiver, {pid, master_secret}})
+
     Logger.info("COMPLETED DTLS HANDSHAKE")
   end
 
