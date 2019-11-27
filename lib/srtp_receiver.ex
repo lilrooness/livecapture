@@ -14,7 +14,8 @@ defmodule RtcServer.SRTPReceiver do
   end
 
   def init([forwarding_pid, master_key]) do
-    porcelain_pid = Porcelain.spawn("./serve_srtp", [master_key])
+    Logger.info("[SRTP] STARTING SRTP RECEIVER")
+    porcelain_pid = Porcelain.spawn("./serve_srtp.sh", [master_key]) |> IO.inspect()
     {:ok, socket} = :gen_udp.open(20000, [{:active, true}, :binary])
 
     {:ok,
@@ -31,6 +32,7 @@ defmodule RtcServer.SRTPReceiver do
           forwarding_pid: forwarding_pid
         } = state
       ) do
+    Logger.info("[SRTP] received SRTP packet")
     GenServer.cast(forwarding_pid, {:srtp_packet, data})
 
     {:noreply, state}
@@ -39,7 +41,7 @@ defmodule RtcServer.SRTPReceiver do
   def child_spec({forwarding_pid, master_key}) do
     %{
       id: __MODULE__,
-      start: {__MODULE__, :start_link, [forwarding_pid, master_key]}
+      start: {__MODULE__, :start_link, [{forwarding_pid, master_key}]}
     }
   end
 end
