@@ -28,11 +28,10 @@ defmodule RtcServer.DTLS do
     {:ok, handshake_socket} = :ssl.transport_accept(listen_socket)
     Logger.info("RECEIVED CLIENT HELLO - continuing handshake ...")
     {:ok, ssl_socket} = :ssl.handshake(handshake_socket)
+    Supervisor.start_child(sup_pid, {__MODULE__, ssl_socket})
 
     {:ok, [master_secret: master_secret]} =
       :ssl.connection_information(ssl_socket, [:master_secret])
-
-    Supervisor.start_child(sup_pid, {__MODULE__, ssl_socket})
 
     {RtcServer.MuxerDemuxer, pid, :worker, _} =
       Supervisor.which_children(sup_pid)
@@ -72,7 +71,6 @@ defmodule RtcServer.DTLS do
   @impl true
   def init(ssl_socket) do
     :ssl.controlling_process(ssl_socket, self())
-    # {:ok, handle} = File.open!("debug_dump", [:write])
     {:ok, %__MODULE__{ssl_socket: ssl_socket}}
   end
 

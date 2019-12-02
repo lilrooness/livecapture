@@ -31,6 +31,13 @@
           rtcPeerConnection.setLocalDescription(answer);
           this.socket.send(JSON.stringify(answer));
         });
+
+        rtcPeerConnection.onAddStream = function(evt) {
+          var remote_video_display = document.getElementById(
+            "remote_video_display"
+          );
+          remote_video_display.src = evt.stream;
+        };
       };
 
       this.socket.addEventListener("close", () => {
